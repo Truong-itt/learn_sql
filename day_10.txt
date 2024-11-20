@@ -1,0 +1,33 @@
+-- liet ke tat ca san pham co so luong trong kho
+--unitslnstock thuoc khoang nho hon 50 hoac lon hon 100
+select *
+from [dbo].[Products]
+where [UnitsInStock] < 50 OR [UnitsInStock] > 100;
+
+-- HAY LIET KE CAC ON HANG DUOC GIAO DEN 
+-- BREAZIL DA BI GIAO MUON 
+-- BIET NGAFY CAN GIAO LA REQUIREDDATE 
+-- NGAY GIAO HANG THUC TE LA SHIPPEDDATE
+select *
+from [dbo].[Orders]
+where [ShipCountry]='Brazil' and [RequiredDate]<[ShippedDate];
+
+
+-- lay ra tat ca cac san pham co gia duoi 100$ va ma the loai khac 1
+-- goi y dung not
+select *
+from[dbo].[Products]
+where NOT([UnitPrice]>=100 and [CategoryID]=1);
+
+-- HAY LIET KE TAT CA DON HANG CO GIA VAN CHUYEN FREIGHT TRONG KHOANG
+-- 50 DEN 100
+select *
+from[dbo].[Orders]
+where [Freight]>=50 and[Freight]<=100;
+
+
+--liet ke cac san pham co so luong hang trong kho unitslnstock lon hon 20
+-- va so luong hang trong don hang unitsonorder nho hon 20
+select *
+from[dbo].[Products]
+where [UnitsInStock]>=50 and[UnitsOnOrder]<=100;

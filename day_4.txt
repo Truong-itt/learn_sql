@@ -1,0 +1,22 @@
+-- dat ten thay the bi danh (alias)
+SELECT [CompanyName] AS [ TEN CONG TY ],
+		[PostalCode] AS "MA BUU DIEN",
+		[Country] AS "QUOC GIA"
+FROM [dbo].[Customers]; 
+
+--VIET CAU LENH RA CHUYEN DOI TEN LAST NAME VA DAT TEN THAY THE LA HO VA 
+-- FIRST NAME VA DAT TEN THAY THE LA TEN 
+SELECT [LastName] AS "HO",
+[FirstName] AS "TEN"
+FROM [dbo].[Employees];
+
+-- VIET RA CAU LENH SQL LAY RA 15 DONG DAU TIEN TAT CA CAC COT TRONG BANG ORDERS 
+-- DAT TEN THAY THE CHO BANG ORDER LA "O"
+SELECT TOP 15 "O".*
+FROM [dbo].[Orders] AS "O";
+
+-- VIET CAU LENH SQL THUC HIEN TRONG BANG PRODUCTID CAC CONG VIEC SAU 
+SELECT TOP 5 "P".ProductName AS "TEN SAN PHAM",
+"P".SupplierID AS "MA NHA CUNG CAP",
+"P".CategoryID AS "MA THE LOAI"
+FROM [dbo].[Products] AS "P";

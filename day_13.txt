@@ -1,0 +1,47 @@
+--[oa] tim ra chu co chu o hoac chu a trong tu do vi du tim ra hat hot nhung 
+-- khong the tim ra duoc tu hit
+-- [^oa] la nguoc lai cua cai o tren tim ra chu khong co hai chu do 
+-- ki tu - co tac dung nhu sau la c[a-b] thi se tao ra khoang tim la tu a den b
+
+
+-- on so lai
+-- hay loc ra tat ca cac khach hang co ten lien he bat dau bang chu 'A'
+select [ContactName]
+from[dbo].[Customers]
+where[ContactName] like'A%';
+
+--tuong tu voi chu va co chu thu 2 la bat ki ki tu nao H
+select [ContactName]
+from[dbo].[Customers]
+where[ContactName] like'H_%';
+
+-- hay loc ra tat ca don hang duoc gui den thanh pho co chu cai bat dau la 
+-- L chu cai thu hai la u hoac o
+select [ShipCity]
+from [dbo].[Orders]
+where[ShipCity] like'Lu%' or [ShipCity] like'Lo%';
+
+select [ShipCity]
+from [dbo].[Orders]
+where[ShipCity] like'L[u,o]%';
+
+-- truong hop phu dinh nhanj chu L va loai di chu u va o
+select [ShipCity]
+from [dbo].[Orders]
+where[ShipCity] like'L[^u,o]%';
+
+-- hay loc ra tat ca don hang duoc gui den thanh pho co chu cai bat dau la L
+-- chu cai thu hai la cac ky tu tu a den u
+select [ShipCity]
+from [dbo].[Orders]
+where[ShipCity] like'L[a-u]%';
+
+-- hay lay ra tat ca cac nha cung cap hang co ten cong ty bat dau bang chu A
+-- va khong chua ky tu b
+select [CompanyName]
+from[dbo].[Suppliers]
+where[CompanyName] like'A[^b]%';
+
+select [CompanyName]
+from[dbo].[Suppliers]
+where[CompanyName] like'A%' and (not [CompanyName] like'%b%');

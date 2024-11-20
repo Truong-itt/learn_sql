@@ -1,0 +1,29 @@
+-- is null ,is not null
+-- kiem tra gia tri co ton tai hay ko
+
+-- lay ra all cac don hang chua duoc giao hang
+select count(*)
+from[dbo].[Orders]
+where [ShippedDate] is not null;
+
+-- lay ra danh sach khach hang co khu vuc (region) khong bi null
+select *
+from[dbo].[Customers]
+where[Region] is not null;
+
+-- mot so vi du dongian tiep theo 
+select *
+from[dbo].[Customers]
+where [ContactName] is null;
+select *
+from[dbo].[Orders]
+where [ShipRegion] is not null;
+
+-- thu thach
+--1. Liệt kê danh sách nhân viên có Region != NULL
+--và ReportTo = NULL (Bảng Employees).
+select *
+from [dbo].[Employees]
+where [Region] is not null and [ReportsTo] is null;
+
+

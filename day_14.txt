@@ -1,0 +1,33 @@
+-- hieu ve in va not in
+-- hay loc ra tat ca cac don hang voi dieu kienj 
+-- a don hang duoc giao den germany ,uk,brazil
+-- b don hang duoc giao den cac quoc gia khac germany,uk,brazil
+--a
+select *
+from [dbo].[Orders]
+where [ShipCountry] in ('Germany','Uk','Brazil');
+--b
+select *
+from [dbo].[Orders]
+where [ShipCountry] not in ('Germany','Uk','Brazil');
+
+-- lay ra cac san pham co ma the loai khac voi 2,3 va 4
+select [ProductID]
+from[dbo].[Products]
+where[ProductID] not in (2,3,4);
+
+-- hay liet ke cac nhan vien khong phai la nu tu bang nhan vien 
+select "TitleOfCourtesy"
+from[dbo].[Employees]
+where [TitleOfCourtesy] not in('Ms.','Mrs.');
+
+-- hay liet ke cac nhan vien la phai la nu tu bang nhan vien 
+select "TitleOfCourtesy",[FirstName]
+from[dbo].[Employees]
+where [TitleOfCourtesy] in('Ms.','Mrs.');
+
+-- hay lay ra all cac khach hang den tu cac thanh pho sau day
+-- berlin london warszawa
+select *
+from [dbo].[Customers]
+where [City] in ('Berlin','London','Warszawa');

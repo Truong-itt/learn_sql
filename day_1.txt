@@ -1,0 +1,26 @@
+--viet cau lenh lay ra ten san pham 
+SELECT[ProductName]
+FROM[dbo].[Products]; 
+
+--viet cau lenh sql lay ra ten san pham 
+-- gia ban tren moi don vi,so luong san pham tren don vi
+SELECT [ProductName],[UnitPrice],[QuantityPerUnit]
+FROM  [dbo].[Products];
+
+SELECT[CompanyName], [Country]
+FROM [dbo].[Customers];
+
+SELECT CompanyName,Country
+FROM dbo.Customers;
+
+SELECT CompanyName,Phone
+FROM Suppliers;
+
+SELECT *
+FROM dbo.Orders;
+
+SELECT *
+FROM dbo.Products;
+
+
+

@@ -1,0 +1,73 @@
+-- liet ke toanbo san pham 
+select p.ProductID,p.ProductName,p.UnitPrice
+from [dbo].[Products] p 
+
+
+-- tim gia trung binh cua cac san pham 
+select avg(p.UnitPrice)
+from [dbo].[Products] p
+
+
+-- loc nhung san pham co gia > gia trung binh 
+select p.ProductID,p.ProductID,p.UnitPrice
+from [dbo].[Products] p 
+where p.UnitPrice > (
+	select avg(p.UnitPrice)
+	from [dbo].[Products] p
+)
+
+-- loc ra nhung khach hang co so don hang > 10 
+select c.CustomerID,c.CompanyName,count(o.OrderID)
+from [dbo].[Customers] c
+left join [dbo].[Orders] o
+on o.CustomerID =c.CustomerID
+group by c.CustomerID,c.CompanyName
+having count(o.OrderID) > 10
+
+-- sub query
+select *
+from [dbo].[Customers] c
+where c.CustomerID in (
+	select [CustomerID]
+	from [dbo].[Orders]
+	group by [CustomerID]
+	having count([OrderID]) > 10 
+)
+
+-- tinh tong tien cho tung don hang
+select o.*,(
+	select sum(od.Quantity*od.UnitPrice)
+	from [dbo].[Order Details] od
+	where o.OrderID=od.OrderID
+)
+from [dbo].[Orders] o
+
+
+
+--loc ra ten san pham va tong so don hang cua san pham 
+select p.ProductID,p.ProductName,(
+	select count(*)
+	from[dbo].[Order Details] od
+	where od.ProductID = p.ProductID
+)
+from [dbo].[Products] p;
+
+
+-- loc ten san pham va tong so don hang cua tung san pham 
+select ProductName,[totalorders]
+from
+	(select p.ProductID,p.ProductName,(
+		select count(*)
+		from[dbo].[Order Details] od
+		where od.ProductID = p.ProductID
+		) as [totalorders]
+	from [dbo].[Products] p
+	) as temp;
+
+-- hay in ra ma don hang va tong gia trij cua don hang do 
+select o.OrderID,(
+	select sum(od.Quantity*od.UnitPrice)
+	from [dbo].[Order Details] od
+	where o.OrderID =od.OrderID 
+)
+from [dbo].[Orders] o

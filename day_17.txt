@@ -1,0 +1,35 @@
+-- tinh so luong don dat hang trong nam 1997 cua tung khach hang
+-- lam ro van de don dat hang tren tung quoc gia
+select [CustomerID],
+count([OrderID]) as[totalorders],
+year([OrderDate]) as [year]
+from [dbo].[Orders]
+group by [CustomerID],year([OrderDate])
+
+-- hay loc ra cac don hang duoc dat hang vao thang 5 nam 1997
+select *
+from [dbo].[Orders]
+where month([OrderDate]) = 5 and year([OrderDate])=1997;
+
+select *
+from [dbo].[Orders]
+where month([OrderDate]) = 9 and year([OrderDate])=1996 and day([OrderDate])=4;
+
+select *
+from [dbo].[Orders]
+where [OrderDate] = '1996-09-04 ';
+
+-- lay danh sach khach hang dat hang nam 1998 va so don hang moi thang
+-- sap xep thang tang dan
+select [CustomerID],month([OrderDate]) as [month],count(*) as [totalorders]
+from[dbo].[Orders]
+where year([OrderDate])=1997
+group by [CustomerID],month([OrderDate])
+order by month([OrderDate]);
+
+--hay loc cac don hang da duoc giao vao thang 5, va sap xep tang dan theo nam
+--select *
+Select *
+from[dbo].[Orders]
+where month([OrderDate])=5
+order by year([OrderDate])asc;

@@ -1,0 +1,40 @@
+-- tinh so luong san pham con lai trong kho unitslnstock sau khi ban het
+-- cac san pham da duoc dat hang unitsondorder
+-- stockremaining = unitslnstock - unitsonorder
+SELECT [ProductName],[UnitsInStock],[UnitsOnOrder],
+		([UnitsInStock]-[UnitsOnOrder]) AS [stockremaining]
+FROM [dbo].[Products]
+
+-- TINH GIA TRI DON HANG CHI TIET CHO ALL SAN PHAM TROGN BANG ORDERDETAILS
+SELECT *,([UnitPrice]*[Quantity])AS[ORDERDETAILVALUE]
+FROM [dbo].[Order Details];
+
+-- tinh ti le gia van chuyen don hang trung binh cua cac don hang trong bang
+--order so voi gia tri van chuyen cua don hang lon nhat 
+-- freightratio = avg(freight)/max(freight)
+select (avg([Freight])/max([Freight])) as [freightratio]
+from [dbo].[Orders];
+
+-- hay liet ke danh sach cac san pham va gia unitprice cua tung san pham 
+-- se duoc giam di 10%
+-- goi y cach 1:dung phep nhan + phep chia
+-- cach 2 chi dung phap nhan
+-- cach 1
+select t.ProductName,t.UnitPrice as "price",(t.UnitPrice * 90 /100) as "sale"
+from [dbo].[Products] as t;
+
+-- cach2
+select t.ProductName,t.UnitPrice as "price",(t.UnitPrice * 0.9) as "sale"
+from [dbo].[Products] as t;
+
+--BÀI TẬP TỰ ĐẶT
+
+--TRUY VẤN SQL XUẤT CỘT ContactName VÀ KẾT QUẢ CỦA SupplierID
+--CHIA LẤY DƯ CHO 6 CỦA BẢNG [Suppliers]
+select [CompanyName],([SupplierID] % 6) as [new]
+from [dbo].[Suppliers];
+--SẮP XẾP THEO THỨ TỰ GIẢM DẦN CỦA CỘT ContactName 
+--VÀ CHỈ LẤY 6 DÒNG ĐẦU TIÊN
+select top 6 *
+from [dbo].[Suppliers]
+order by [CompanyName] desc;

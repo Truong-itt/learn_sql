@@ -1,0 +1,499 @@
+-- thuc hien lai vc hoc truy suat togn quat titv
+
+-- video 1 select ... from 
+use NORTHWND
+select * from dbo.Products
+--viet cau lenh lau ra ten san pham gia ban tren moi don vi so luong
+-- san pham tren don vi 
+select p.ProductName,p.UnitPrice,p.QuantityPerUnit from dbo.Products p
+-- viet cau lenh lay ra ten khach hang va quoc gia cua cac khach hàng do
+select c.ContactName,c.Country from dbo.Customers c
+-- viet cau lenh sql lay ra ten va so dien thoai cua tat ca nhà cung cap hang
+select s.ContactName,s.Phone from dbo.Suppliers s
+
+-- video 2 
+-- select distinct ... from ...
+-- kieu du lieu khogn trung lap 
+-- viet cau lanh lay ra ten quoc  gia tu customer khong trug
+select distinct c.Country from dbo.Customers c
+-- viet cau lenh sql lay ra ten cac ma so buu dien postalcode khac nhau tu bang nha cung cap
+select distinct s.PostalCode from dbo.Suppliers s
+-- viet cau lenh sql lay ra cac du lieu khac nhau ve ho cua nhan vien 
+-- và cách gọi danh hiệu lịch sự titleofcourtesy cua nhan viien tu bang employees
+select distinct e.LastName,e.TitleOfCourtesy from dbo.Employees e
+-- viet cau lenh sql  lay ra ma don vi van chuenn shipvia khac nhauu cua cac don hang orders
+select distinct o.ShipVia from dbo.Orders o
+
+-- video 3 select top ... from 
+-- lay ra so luong tuy ý  trong sql khi select den bang 
+-- viet cau lenh sql lay ra 5 dong dau tien trong bang customers
+select top 5 * from dbo.Customers
+-- viet cau lenh sql lay ra 30% nhan vien cua cong ty hien tai
+select top 30 percent * from dbo.Employees
+-- viet cau lenh sql lay ra cac don hang voi quy định là 
+-- mã khách hàng không được trùng lập
+-- chỉ lấy 5 dòng dữ liệu đầu tiên 
+select distinct top 5 o.CustomerID from dbo.Orders o
+
+-- video 4 dat ten thay the cho cot 
+-- viet cau lenh sql lay ra companyname và đặt tên thay thế là công ty 
+-- tuong tu postalcode là mã bưu điện
+select c.CompanyName [công ty],c.PostalCode [mã bưu điện] from dbo.Customers c
+-- viet cau lenh ra lastname dat ten thay the là họ tuong tu first name là tên 
+select e.LastName [họ],e.FirstName [tên] from dbo.Employees e
+--lay ra 15 dong đầu tiên các cột trogn orders 
+-- dat ten thay order la truong_dep_trai
+select top 15 truong_dep_trai.* from dbo.Orders truong_dep_trai
+
+-- video 5
+-- tim gia tri min max trong sql 
+-- viet ra cau lenh sql tim giathap nhat cua cac sa npham trong bang products
+select min(p.UnitPrice),max(p.UnitPrice) from dbo.Products p
+-- viet ra cau lenh lay ra ngay dat hang dan day tu bang orders
+select max(o.OrderDate) from dbo.Orders o
+-- lay ra ma va ten san pham co so luong hang tot kho unítlnstock lon nhat
+select max(p.UnitsInStock) from dbo.Products p 
+-- cho biet tuoi don lon nhat cua nhan vien công ty 
+-- gợi ý có ngày sinh cang nhỏ thì người đó càng lớn tuổi 
+select max(year(GETDATE())-year(e.BirthDate)) from dbo.Employees e
+
+
+-- video 6 count,sum,avg
+-- dem so luong khach hang co trong bang customers
+select count(*) from dbo.Customers
+-- tinh tong so tienf van chuyen cua tat ca don hang
+select sum(o.Freight) from dbo.Orders o
+-- tinh trung binfh so luong dat hang quantity cua tat ca cac san pham trong bang order detail
+select avg(od.Quantity) from dbo.[Order Details] od
+-- dem so luong tinh tong so luong hang ton kho 
+-- va trung binh gia cua cac san pham co bang product 
+use [NORTHWND]
+select count(*),sum(p.UnitsInStock),avg(p.UnitPrice) from [dbo].[Products] p
+
+
+-- video 7 order by 
+-- sap xêp kết quả truy vấn
+-- hay liet ke tat ca cac nha cung cap theo thu tu ten don vi companyname
+select s.CompanyName from dbo.Suppliers s order by s.CompanyName;
+-- hay liet ke tat ca cac san pham theo thu ti gia giam dan 
+select * from dbo.Products p order by p.UnitPrice desc;
+-- hay liet ke tac ca cac nhan vien theo thu t ho va ten dem a-z
+select e.LastName,e.FirstName from dbo.Employees e order by e.LastName,e.FirstName;
+-- hay lay ra mot san pham có số lượng bán cao nhất từ bảng order details
+-- yeu cau khong dung max
+select top 1 * from dbo.[Order Details] od order by od.Quantity desc;
+-- liet ke danh sacch cac don dat hang orderí trong bang order 
+-- theo thu tu giam dan cua ngay dat orderdate
+select * from dbo.Orders o order by o.OrderDate desc;
+-- hay liet ke ten don gia so luong trong kho unítlnstock 
+-- của all cac san pham trong bang productss theo thu tu giam dan unitslnstock
+select p.ProductName,p.UnitPrice,p.UnitsInStock from dbo.Products p order by p.UnitsInStock desc;
+
+
+-- video 8 cong tru nhan chia trong sql 
+-- tinh so luong san pham con lai trong ko unitslnstock sau khi ban het cac
+-- san pham da dược dat hang unitsônrder
+-- goi ý số lượng sản phẩm còn lại nghĩa là trừ đi so sllượng sản phẩm đã order
+select p.ProductID,p.ProductName,p.UnitsInStock,p.UnitsOnOrder,p.UnitsInStock -  p.UnitsOnOrder [so luong san pham con lai] from dbo.Products p
+-- tinh gia tri dơn hang chi tiét  cho tat ca các san pham trong bảng order details
+-- nói thẳng ra là tính tiền dựa vào số lượng sàn phẩm và giá tiền của sản phẩm
+select od.Quantity,od.UnitPrice,od.Quantity*od.UnitPrice [orderdetailvalue] from dbo.[Order Details] od
+-- tinh tuu le gia van chuyen don dat hang freight trung bình cua các đơn hàng 
+-- trong bảng orders so với giá trị vận chuyển của đơn hàng lớn nhất maxfreight
+-- goi ý là trung bình giá / giá măc nhất của san phẩm 
+select avg(o.Freight)/max(o.Freight) [freightratio] from dbo.Orders o
+-- liet ke danh sach cac san pham và giá unítprice cua tung san pham 
+-- se duoc giam 10%
+select p.UnitPrice*0.9 [discounttenpercent] from dbo.Products p
+
+-- video 9 where chọn lọc điêu kiện 
+-- ban hay liett ke tat ca cac nhan vien den tu thanh phó london 
+-- sap xep ket qua theo last name tu a-z
+select  * from  dbo.Employees
+-- bài giải 
+select * from dbo.Employees e where e.City = 'London' order by e.LastName;
+-- ban hay liet ke tất cả các đơn hàng bị giao muộn 
+-- biết rằng đơn hàng cần phải giao laf requiređate ngày giao hang thực tế là shippeđate
+select * from dbo.Orders o where o.RequiredDate < o.ShippedDate
+-- lay ra tat ca cac don hang chi tiet được giảm giá nhiều hơn 10 %
+select* from dbo.[Order Details] od where od.Discount > 0.1
+-- hay liet ke tat ca cac don hang duoc gui den pháp
+select * from dbo.Orders o where o.ShipCountry = 'France'
+-- hay liet ke cac san pham co so luong hang trong khi unitslnstock lớn hơn 20
+select *from dbo.Products p where p.UnitsInStock > 20
+
+--video 9 + toán tử and or not,between .. and ..
+-- hay liet kê all các san phẩm có số lượng trong kho unitslnstock 
+-- thuoc khoang nhỏ hơn 50 hoặc lớn hơn 100
+select * from dbo.Products p where  not(p.UnitsInStock  between 50 and 100)
+select * from dbo.Products p where  p.UnitsInStock  < 50 or p.UnitsInStock > 100
+-- hay liet ke tat ca cac don hang duoc gui den brazil và bị giao muộn 
+select * from dbo.Orders o where o.ShipCountry = 'Brazil' and o.RequiredDate < o.ShippedDate
+-- lay ra tat ca các sản phẩm có giá dưới 100$ và mã thể loại khác 1
+-- luu ý buộc dùng not
+select *from dbo.Products p where not(p.UnitPrice > 100 or p.CategoryID=1)
+-- hay liet ke tat ca cac don hang co gia van chuyên freight trong khoảng 50 -100 $
+select * from dbo.Orders p where (p.Freight  between 50 and 100)
+-- lay ra danh sach cac san pha có gia ban trong khoang tu 10 den 20 $
+select * from dbo.Products p where  p.UnitPrice  between 10 and 20
+-- mot vai cai tuong tu 
+select * from dbo.Orders o where o.OrderDate between '19960701' and '19960731'
+select sum(o.Freight) as [totaljulfreight] from dbo.Orders o where o.OrderDate between '19960701' and '19960731'
+
+
+-- video 10 like kieu du lieu tuong tu trong lap trinh sql 
+-- lay ra all khach hang den tu cac quoc gia bat dau bang chu 'A'
+select * from dbo.Customers c where c.Country like 'A%'
+-- cac don hagn gui den thanh pho co chư a trong ten 
+select * from dbo.Orders o where o.ShipCity like '%a%'
+-- mot vai vd
+select * from dbo.Orders o where o.ShipCountry like 'U_'
+select * from dbo.Orders o where o.ShipCountry like 'U%'
+--noi tiep video 10 
+-- kieu like b% 
+-- kieu rang buoc b_c
+-- kieu rangg bụo ký teu b[a,c]t  a hay c deu se nhạn được nhưng chi lấy một truòng hợp 
+-- b[^a,c]t nguoc lai vơi ở treen 
+-- b[a-t]c rang buọc khoang cho kieu du lieu 
+-- lay ra all khach hang co ten bat dau bang chu 'A'
+select * from dbo.Customers c where c.ContactName like 'A%'
+-- mot vai vd
+select * from dbo.Customers c where c.ContactName like 'H_%'
+select * from dbo.Orders o where o.ShipCity like 'L[u,o]%'
+select * from dbo.Orders o where o.ShipCity like 'L[^u,o]%'
+select * from dbo.Orders o where o.ShipCity like 'L[a-e]%'
+select * from dbo.Suppliers s where s.CompanyName like 'A%[^b]%'
+
+
+
+--video 11 in /not in ,is null is not null
+-- hay loc ra all cac don hang với điêu kiện 
+-- dia chi nhạn hang nam trong 3 quôc gia sao Germany','UK','Brazil
+select * from dbo.Orders o where o.ShipCountry in ('Germany','UK','Brazil')
+-- byy constract
+select * from dbo.Orders o where o.ShipCountry not in ('Germany','UK','Brazil')
+-- lay ra cac san pham co ma the loai khac 2 3 4
+select *from dbo.Products p where p.CategoryID not in (2,3,4)
+-- hay liet ke cac nhan vien khong phai là nu tu bang nhan vien 
+select *from dbo.Employees e where e.TitleOfCourtesy not in ('Ms.','Mrs.')
+-- lay ra all cac đơn hàng chưa đươccj giao hàng
+ select *from dbo.Orders o where o.ShippedDate is null
+ -- lay ra danh sach khach hang co khu vục khong bị null
+ select * from dbo.Customers c where c.Region is not null
+ -- lay danh sach cach khách hàng không có tên công ty companyname 
+ select * from dbo.Customers c where c.CompanyName is null 
+ -- lẩy ra đơn hang chưa được giao và shipregion khôngg bị null
+ select * from dbo.Orders o where o.ShippedDate is null and o.ShipRegion is not null
+
+
+
+ -- video 12 gom nhóm kiêu dữ liệu trong lập trình sql +_ having điều kiện khi dùng sql group by + kiểu dữ liệu ngày tháng năm trong lập trình sql 
+ -- nhin chung tinh chất thang này là gom nhóm những thằng giống nhau lại 
+ -- viec gom nhóm giúp cho dư liệu được quản lí có tuần tự điều kiện tốt hơn 
+ -- có thể là nó phân đóng đỏ thành từng bảng cũng được cho dễ
+ -- hay cho biết mỗi khách hang cđã đặt bao nhiêu đơn hang
+ select CustomerID,count(*) from dbo.Orders o group by o.CustomerID
+ -- tính gias trị đơn igá trung bình theo mỗi nhà cung cấp sản phẩm
+ select SupplierID,avg(p.UnitPrice) from dbo.Products p group by p.SupplierID
+ -- hay cho biết mỗi thể loại có tổng số bao nhiêu sản phẩm trong kho 
+ select CategoryID,sum(p.UnitsInStock)from dbo.Products p group by p.CategoryID 
+ -- hay cho biết giá vận chuyển thấp nhât va lơn nhất của các đơn hàng theo từng 
+ -- thành phố và quốc gia khác nhau 
+select o.ShipCity,o.ShipCountry,min(o.Freight),max(o.Freight) from dbo.Orders o group by o.ShipCountry,o.ShipCity
+-- thong ke so luong nhan vien theo tung quoc gia khac nhau 
+select e.Country,count(*) from dbo.Employees e group by e.Country 
+-- tính số lương đơn đặt hang của từng khách hàng trong năm 1997
+use NORTHWND
+select o.CustomerID,count(*), year(o.OrderDate) from dbo.Orders o where year(o.OrderDate) = 1997 group by o.CustomerID ,year(o.OrderDate)  
+-- lọc ra các đơn hang đặt hang vào tháng 5 năm 1997
+select* from dbo.Orders o where month(o.OrderDate) = 5 and year(o.OrderDate) = 1997
+-- lấy ra các đơn hàng được đạt vào ngày 4 tháng 9 năm 1996
+select * from dbo.Orders o where o.OrderDate = '19960904'
+-- lay ra các dươn hang được đạt vào năm 1998 và số dươn mỗi thán sắp sếp tháng tăng dần 
+select   o.CustomerID,month(o.OrderDate),count(*),year(o.OrderDate)from dbo.Orders o where year(o.OrderDate) = 1998  group by year(o.OrderDate),month(o.OrderDate),o.CustomerID order by month(o.OrderDate);
+-- loc cac don hang duọc giao vào tháng 5 và xắp sếp tăng dần
+-- hay chgo biết những khacha hàng nào đã dặth nhiều hơn 20 đơn hang săp xếp giảm dần
+select o.CustomerID,count(*) from dbo.Orders o group by o.CustomerID having count(*) > 20 order by  count(*) desc;
+-- lay ra san pham ton trong kho lớn hơn 30 và có trung bình đơn giá dưới 50
+select p.ProductID,sum(p.UnitsInStock),avg(p.UnitPrice) from dbo.Products p group by p.UnitsInStock,p.UnitPrice,p.ProductID having sum(p.UnitsInStock)>30 and avg(p.UnitPrice)<50
+-- hay cho bbiết tổng số tiền vận chuyển của tửng tháng ,trong nữa năm sau năm 1996,sep xep tăng dần 
+select month(o.ShippedDate),sum(o.Freight) 
+from dbo.Orders o
+where o.ShippedDate between '19960701'and '19961231'
+group by month(o.ShippedDate)
+order by sum(o.Freight);
+--loc ra nhugn thanh pho co so luong don hang lon hon > 16,xep giảm 
+select o.ShipCountry,count(*) from dbo.Orders o group by o.ShipCountry having count(*) > 16order by count(*) desc;
+
+
+
+-- video 13 ôn tập sql
+-- loc ra nhung khach hang nao đã đạt nhiều hơn 20 đơn hàng,xếp giảm 
+select o.CustomerID,count(*) from dbo.Orders o group by o.CustomerID having count(*)> 20 order by count(*)desc; 
+-- loc ra nhan vien co tong so don hang lon hon hoac bang 100,xep giảm 
+select o.EmployeeID,count(o.OrderID) from dbo.Orders o group by o.EmployeeID having count(o.OrderID) >= 100 order by count(o.OrderID)desc
+-- hay cho biet the loai nao co so san pham khac nhau lơn hơn 11 
+select p.CategoryID,count(p.ProductID)  from dbo.Products p group by p.CategoryID having count(p.ProductID)> 11
+-- hay cho biet the loai nao co so san pham khac nhau co tong số lượng sảnphẩm trong kho lơn hơn 350 
+select p.CategoryID,sum(p.UnitsInStock) from dbo.Products p group by p.CategoryID having sum(p.UnitsInStock)> 350
+-- hay cho biet nhung quoc gia nao co nhieu hơn 7 khách hang tu bang order
+select o.ShipCountry,count(o.OrderID) from dbo.Orders o group by o.ShipCountry having count(o.OrderID) > 7
+-- hay cho biet nhưng ngày nào có nhiêu hơn 5 đơn hang săp xếp theo thứ tự thời gian tăng dần 
+select o.ShippedDate ,count(*)from dbo.Orders o group by o.ShippedDate having count(*) > 5 order by o.ShippedDate;
+-- hay cho biêt nhưng quốc gia bắt đầu bằng chứ a hoặc chứ g và có số lượng đơn hàng lơn hơn 29
+select o.ShipCountry,count(*) from dbo.Orders o where o.ShipCountry like '[A,G]%' group by o.ShipCountry having count(*) > 29 
+-- hay cho biết nhưng thành phố nào có số lượng đơn hàng được giao là khác 1 và 2
+-- dat hang trong khoảng tháng 4 năm 1997 đến thán 8 năm 1997
+select o.ShipCountry,count(*) from  dbo.Orders o where o.OrderDate between '19970401'and '19970831'
+group by o.ShipCountry having count(*) not in (1,2);
+
+
+
+
+-- video 14 thực hiện truy vấn sql từ nhiều bảng 
+-- tu bang products và categories hay in ra các thông tin sau đây 
+-- mã thể loại tên thể loại mã sản phẩm tên sản phẩm 
+use NORTHWND select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName from dbo.Products p,dbo.Categories c where p.CategoryID = c.CategoryID
+-- tu bảng employeé và order hãy in ra các thông tin sau dây
+-- ma nhân viên tên nhân viên số lượng đơn hàng mà nhân viên đã bán được 
+select e.EmployeeID,e.FirstName,count(o.OrderID) from dbo.Employees e,dbo.Orders o where e.EmployeeID = o.EmployeeID group by e.EmployeeID,e.FirstName
+-- tu customers và orderss hay in ra cacs thong tinsau day
+-- ma so khach hang ten cong ty ten lien he so luong don hang da mua
+select c.CustomerID,c.CompanyName,c.ContactTitle,o.ShipCountry,count(o.OrderID) from dbo.Customers c,dbo.Orders o where c.CustomerID = o.CustomerID and o.ShipCountry = 'UK' group by  c.CustomerID,c.CompanyName,c.ContactTitle,o.ShipCountry
+-- tu bang orderrs va shippers hay in cac thong tin sau day 
+-- ma nha van chuyen ten cong ty van chuyen tong so tien duowc van chuyen- va in ra man hinfh thu tu tien giarm dan
+select  s.ShipperID,s.CompanyName,sum(o.Freight)
+from dbo.Orders o,dbo.Shippers s where o.ShipVia = s.ShipperID 
+group by s.ShipperID,s.CompanyName order by sum(o.Freight) desc;
+-- tu bang product vaf suppliers hay in ra cac thong tin sau day 
+-- ma nha cung cap ten cong ty tong so cac san pham khac nhau da cung cap
+-- chi in ra man hinh duy nhat 1 nha cung cap co so luong san pham khac nhau nhieu nhat
+select top 1 s.SupplierID,s.CompanyName,count(p.ProductID)
+from dbo.Products p,dbo.Suppliers s where s.SupplierID=p.SupplierID 
+group by s.SupplierID,s.CompanyName
+order by count(p.ProductID) desc;
+-- tu bang orders và order details hãy in ra các thôgn tin sau đây
+-- ma đơn hàng tổng số tiền sản phẩm của đơn hàng đó
+select o.OrderID,sum(od.Quantity*od.UnitPrice) from dbo.Orders o,dbo.[Order Details] od where o.OrderID= od.OrderID group by o.OrderID
+-- tu 3 bang order details employees orders hãy in ra các thông tin sau đây
+-- ma đơn hàng tên nhân viên tổng số tiền sản phẩm của đơn hàng
+select o.OrderID,e.FirstName,e.LastName,sum(od.Quantity*od.UnitPrice)
+from dbo.Orders o,dbo.[Order Details] od,dbo.Employees e 
+where o.OrderID= od.OrderID and o.EmployeeID=e.EmployeeID 
+group by o.OrderID,e.FirstName,e.LastName;
+-- tu 3 bang customers orders shippers hãy in ra các thông tin sau đay
+-- ma đơn hàng tên khách hàng tên công ty vận chuyển
+-- và chỉ in ra các đơn hàng được vận chuyển đến 'UK' trong năm 1997
+select o.OrderID,c.ContactName,s.CompanyName,o.ShipCountry from dbo.Orders o,dbo.Shippers s,dbo.Customers c where o.CustomerID=c.CustomerID and  s.ShipperID = o.ShipVia and o.ShipCountry='UK'
+-- tu bản product và categoris hay tim các sản phẩm thuộc dánh sách 'Seafood' in ra cacs thong tin sau 
+-- ma the loai ten the loai ma san pham ten san pham 
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName from dbo.Categories c,dbo.Products p where p.CategoryID = c.CategoryID and c.CategoryName='Seafood'
+-- tu bang product va suppliers hay tim cac san pham in ra thong tin sa o
+-- ma nha cung cap quoc gia ma san pham ten san pham 
+select s.SupplierID,s.Country,p.ProductID,p.ProductName from dbo.Products p,dbo.Suppliers s where s.SupplierID =p.SupplierID
+-- tu 3 bang customers orders shippers yeu cau chi lay ra don o london
+-- in ra thong tin sao ma don hang ten khach hang ten cong ty van chuyen
+select o.OrderID,c.ContactName,s.CompanyName from dbo.Orders o,dbo.Suppliers s,dbo.Customers c where o.CustomerID=c.CustomerID and o.ShipVia =s.SupplierID  and o.ShipCity = 'London'
+-- tu 3 bang nhu tren bo xung lai dieu kien la chi in ra don hang bi giao tre
+select o.OrderID,c.ContactName,s.CompanyName,o.RequiredDate,o.ShippedDate from dbo.Orders o,dbo.Suppliers s,dbo.Customers c where o.CustomerID=c.CustomerID and o.ShipVia =s.SupplierID  and o.RequiredDate < o.ShippedDate
+-- lay ra shipcountri tu va khogn lay nhung khach hang den tu My
+-- chi lay nhung cuoc gia co so don hown 100 
+-- hien thi shipcountry va number of orders 
+select o.ShipCountry,count(o.OrderID) from dbo.Customers c,dbo.Orders o,dbo.Suppliers s where c.CustomerID = o.CustomerID and o.ShipVia = s.SupplierID and not(o.ShipCountry ='USA') group by o.ShipCountry having count(*) > 100
+
+
+-- video 15 cau lenh union /union all trong sql 
+-- nói cách khác khi bạn select tử nhiều điện kiện lại với nhau 
+-- bạn sẽ lấy ra được 
+-- ví dụ select tư hai bảng xét về một table 
+-- thi bạn select sẽ bị 433
+-- và bản thứ hai la 22 
+-- dúng lí lay ra se la 455 nhưng se co mot vai cai thoe ca hai 
+-- suy ra chung ta can du lieu dọc lập không bị trùng tránh sai lệch dữ liệu 
+-- nguoc lai union all cho phép trung lập dư liệu 
+select od.OrderID,od.ProductID from dbo.[Order Details] od where od.UnitPrice between 100 and 200
+union 
+select od.OrderID,od.ProductID  from dbo.[Order Details] od where od.Quantity in (10,20)
+-- thuc hiên truy van du lieu union all
+select od.OrderID,od.ProductID from dbo.[Order Details] od where od.UnitPrice between 100 and 200
+union all
+select od.OrderID,od.ProductID  from dbo.[Order Details] od where od.Quantity in (10,20)
+-- hay liet ke toàn bo cac thanh pho va quoc gia ton tai trong 
+-- suppliers và customers với 2 tình hướng sư dụng union va union all
+select distinct s.Country from dbo.Suppliers s 
+union 
+select distinct c.Country from dbo.Customers c -- 94
+select distinct s.Country from dbo.Suppliers s 
+union all
+select distinct c.Country from dbo.Customers c--99
+
+
+-- video 16 kieu du lieu  join left join và right join 
+-- nói ra là láy nhưu sau  join là lấy điểm chung giữa hai bảng
+-- left join la lây điêm chung giữa hai bảng và nhưng gì conlại của bảng bên trai 
+-- right join la ngược lại với left join 
+-- full join la có nhiêu lấy hết
+-- vu dụng innet join hay in ra cac thong tin sau day 
+-- ma don hang ten cong ty khach hang
+-- bai tap su dụng inner join 
+-- tu bang products và categories hãy in ra các thong tin sau đay
+-- ma the loai ten the loai ma san pham ten san pham 
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName from dbo.Categories c
+join dbo.Products p
+on c.CategoryID = p.CategoryID
+-- su dung join hay in ra cac thong tin sau day 
+-- ma don hang ten cong ty khach hang
+select o.OrderID,c.CompanyName from dbo.Orders o
+join dbo.Customers c
+on o.CustomerID = c.CustomerID
+-- vi du 3 tu bang products va categories hay in ra cac thong tiun sau day
+-- ma the loai ten the loai ma san pham ten san pham 
+select c.CategoryID,c.CategoryName,p.ProductID from dbo.Products p 
+join dbo.Categories c
+on p.CategoryID = c.CategoryID
+-- vi du cho thay mhoac dong tren lenh left join và right join
+select c.CategoryID,c.CategoryName,p.ProductID from dbo.Products p 
+right join dbo.Categories c
+on p.CategoryID = c.CategoryID
+-- thuc hien tren co group by
+select c.CompanyName,count(o.OrderID) from dbo.Orders o
+right join dbo.Customers c
+on o.CustomerID = c.CustomerID
+group by c.CompanyName
+-- full join 
+select c.CategoryID,c.CategoryName,p.ProductID from dbo.Products p 
+full join dbo.Categories c
+on p.CategoryID = c.CategoryID
+-- bai tap ve cau lenh join trong lap trih sql 
+-- liet ke ten san pham va ten nha cung cap cua cac san pham da duoc
+-- dat hang trong bang order details su dụng inner join 
+-- để kết hợp bảng order deta=ils voi cac bang lien quan de lay thong tin san pham va nha cung cap 
+select p.ProductName,s.CompanyName from dbo.Products p  
+join dbo.Suppliers s
+on p.SupplierID = s.SupplierID
+-- bai tap left join liet ke ten khach hang va ten nhan vien phu trach 
+-- cua cac don hang trong bang order 
+-- bao gom ca cac hon hang khong co nhan vien phu trách
+-- dùng left join 
+select o.CustomerID,e.FirstName,e.LastName,c.CompanyName from dbo.Orders o 
+left join dbo.Employees e
+on o.EmployeeID = e.EmployeeID
+left join dbo.Customers c
+on c.CustomerID = o.CustomerID
+-- bai tap right join liet ke ten khach hang va ten nhan vien phu trach
+-- tu order su dụng right join để kêt hợp order với bảng customers
+-- de lây thong tin về khách hàng và nhân viên phụ trach
+select e.FirstName,c.CompanyName from dbo.Orders o
+right join dbo.Customers  c on c.CustomerID = o.CustomerID
+right join dbo.Employees e on e.EmployeeID = o.EmployeeID
+-- liet ke ten danh muc va ten nha cung cap cua cac san pham trong 
+-- bang product bao gom ca cac danh mục va nhà cung cấp thông tin 
+-- không co sản phẩm sử dụng full join hoặc kêt hợp left join và right join 
+select c.CategoryName,s.CompanyName from dbo.Products p 
+full join dbo.Suppliers s 
+on p.SupplierID = s.SupplierID
+right join dbo.Categories c
+on c.CategoryID = p.CategoryID
+-- liet ke ten khach hang va ten san pham da dươc dạt hang trong bản
+-- orders và orders detail 
+-- du dụng inner join de ket họp order va order detail  de lay thong tin
+-- khách hang va san pham da duoc dat hang
+select c.ContactName,p.ProductName from dbo.Orders  o
+join dbo.[Order Details] od
+on o.OrderID = od.OrderID
+join Customers c
+ on c.CustomerID = o.CustomerID
+ join dbo.Products p 
+ on p.ProductID = od.ProductID
+
+
+
+ --video 17 truy vấn lồng truy vấn trong lập trình sql 
+ select * from dbo.Products
+ -- tim gia trung bình cua cac san pham 
+ select avg(p.UnitPrice) from dbo.Products p 
+ --loc san pham có giá hơn > giá trung bình 
+ select  * from dbo.Products p where p.UnitPrice > ( select avg(p.UnitPrice) from dbo.Products p )
+ -- loc ra nhung khach hang có số đơn hang > 10 
+ select c.CustomerID,c.CompanyName,count(*) 
+ from dbo.Customers c
+ left join dbo.Orders o 
+ on o.CustomerID = c.CustomerID
+ group by c.CustomerID,c.CompanyName having count(*) > 10
+ -- co the thu select long sub vào điều hiện điều được 
+ select * from dbo.Customers c where c.CustomerID in (
+	 select sub.CustomerID from (
+		 select c.CustomerID,c.CompanyName,count(*) as [truong]
+		 from dbo.Customers c 
+		 left join dbo.Orders o 
+		 on o.CustomerID = c.CustomerID
+		 group by c.CustomerID,c.CompanyName having count(*) > 10
+	 ) as sub
+ )
+-- tinh tong tien cho tung don hang
+-- truong hop select thành thêm cột cho trương select 
+select o.*,(select sum(od.Quantity*od.UnitPrice) from dbo.[Order Details] od)as [price] from dbo.Orders o
+-- loc ra ten san pham va tong so do nhang cua san pham 
+select p.ProductID,p.ProductName,(select count(*) 
+	from dbo.[Order Details] od 
+	where p.ProductID = od.ProductID) 
+from dbo.Products p 
+-- co the dung nay nhu mot bang de mik select dên nhưng chỉnh lại vài chỗ
+select sub.ProductName,sub.truong
+from (
+	select p.ProductID,p.ProductName,(select count(*) from dbo.[Order Details] od 	where p.ProductID = od.ProductID) as [truong]
+	from dbo.Products p 
+) as sub;
+-- in ra ma don hang vâ tong giá trị của đơn hang đó
+select o.OrderID,(select sum(od.Quantity*od.UnitPrice) from dbo.[Order Details] od where o.OrderID = od.OrderID)
+from dbo.Orders o
+-- liet ke cac don dat hang co ngay dat hang gan nhat
+select max(o.OrderDate) from dbo.Orders o
+-- truy ván lồng vào 
+select * from dbo.Orders o
+where o.OrderDate = (select max(o.OrderDate) from dbo.Orders o)
+-- liet ke tat cả các sản phẩm productname 
+-- mà không có đơn đặt hàng nào đặt mua chúng 
+select * from dbo.Products p where p.ProductID not in (select distinct ProductID from dbo.[Order Details])
+-- lay thong tin ve cac don hang và ten cac san pham 
+-- thuọc cac don hang chua duoc giao cho khach
+-- goi y shippeddate tont tại cho biết đơn hang đã được giao
+select o.OrderID
+from dbo.Orders o 
+where o.ShippedDate is null;
+-- thuc hiên lấy thông tin về các đơn hàng và tên các sản phẩm
+-- thuộc các đơn hàng chưa được giao 
+select  o.OrderID,p.ProductName from dbo.Orders o 
+join dbo.[Order Details] od
+on o.OrderID = od.OrderID
+join dbo.Products p 
+on p.ProductID = od.ProductID
+where o.OrderID in (select o.OrderID
+	from dbo.Orders o 
+	where o.ShippedDate is null
+)
+-- lay thong tin va cac san phẩm có số lượng tồn kho 
+-- ít hơn số lượng tồn kho trung bình của tất cả các sản phẩm 
+select * from dbo.Products p
+where p.UnitsInStock > (
+	select avg(p.UnitsInStock)from dbo.Products p
+)
+-- lay thong tinve cac khach hang co tong gia tri don hang lon nhat
+select max(od.Quantity*od.UnitPrice) from dbo.[Order Details] od group by od.OrderID
+select c.CustomerID,c.CompanyName,(od.UnitPrice* od.Quantity) from dbo.Customers c
+join dbo.Orders o
+on o.CustomerID = c.CustomerID
+join dbo.[Order Details] od
+on od.OrderID = o.OrderID
+where od.UnitPrice* od.Quantity = (select max(od.Quantity*od.UnitPrice)from dbo.[Order Details] od )
+
+
+-- vieo cuôi 
+-- thứ tự thực thi truy vân trong sql 
+-- from 
+-- where
+-- groupby 
+-- having 
+-- select 
+-- order by 
+-- limit

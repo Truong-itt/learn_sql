@@ -1,0 +1,141 @@
+-- join left join right join full join 
+-- tu bang products va ategories in ra cac thong tin sau 
+-- ma the loai 
+-- ten the loai 
+-- ma san pham 
+-- ten san pham 
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Categories] c
+inner join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+
+
+
+-- su dung inner join 
+-- tu bang products va categories , hay dua ra cac thong tin sau 
+-- ma the loai
+-- ten the loai 
+-- so luong san pham 
+select c.CategoryID,c.CategoryName,count(p.[ProductID])
+from [dbo].[Categories] c
+inner join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+group by c.CategoryID,c.CategoryName
+
+
+-- su dung inner join hay in ra cac thon tin sau day 
+-- ma don hang 
+-- ten cong ty khach hang
+-- bang orders customers
+select o.OrderID,c.CompanyName
+from [dbo].[Orders] o
+inner join [dbo].[Customers] c
+on o.CustomerID=c.CustomerID
+
+-- left join 
+-- tu bang products va ategories in ra cac thong tin sau 
+-- ma the loai 
+-- ten the loai 
+-- ma san pham 
+-- ten san pham 
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Categories] c
+inner join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+-- 77
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Categories] c
+left join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+--79
+
+select c.CategoryID,c.CategoryName,count(p.ProductID)
+from [dbo].[Categories] c
+left join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+group by c.CategoryID,c.CategoryName
+-- 10 
+select c.CategoryID,c.CategoryName,count(p.ProductID)
+from [dbo].[Categories] c
+inner join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+group by c.CategoryID,c.CategoryName
+-- 8
+
+-- right join 
+-- su dung right join hay inra cac thong tin sau day 
+-- ma don hang
+-- ten cong ty khach hang
+select o.OrderID,c.CompanyName
+from [dbo].[Orders] o
+inner join [dbo].[Customers] c
+on o.CustomerID=c.CustomerID
+-- khong co titv
+
+select o.OrderID,c.CompanyName
+from [dbo].[Orders] o
+right join [dbo].[Customers] c
+on o.CustomerID=c.CustomerID
+-- co titiv 
+
+
+select c.CompanyName,count(o.OrderID)
+from [dbo].[Orders] o
+right join [dbo].[Customers] c
+on o.CustomerID=c.CustomerID
+group by c.CompanyName
+-- co titv
+
+select c.CompanyName,count(o.OrderID)
+from [dbo].[Orders] o
+inner join [dbo].[Customers] c
+on o.CustomerID=c.CustomerID
+group by c.CompanyName
+-- khong co titv
+
+
+--full join 
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Categories] c
+left join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+
+
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Categories] c
+right join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Categories] c
+full join [dbo].[Products] p
+on c.CategoryID = p.CategoryID
+
+
+-- cau hoi 1 hay lieu ke ten nhan vien va ten kahach hang cua cac don hang trong bang 'Orders'(inner join)
+select o.OrderID,e.LastName,e.FirstName,c.ContactName
+from [dbo].[Orders] o 
+inner join [dbo].[Employees] as e
+on o.EmployeeID = e.EmployeeID
+inner join [dbo].[Customers] as c
+on o.CustomerID = c.CustomerID
+
+-- cau hoi 2 hay liet ke ten nha cung cap va ten san pha cuar cac san pham trong bang products bao hom ca cac san pha khong co nha cung cap(left join)
+select s.ContactName,p.ProductName
+from [dbo].[Products] p 
+left join [dbo].[Suppliers] s
+on p.SupplierID =s.SupplierID
+
+-- cau hoi 3 (right join) hay liet ke ten khach hang va ten don hang cua cac don hang trong bang orders bao gom ca cac khach hang khong co don hang
+select c.ContactName,o.OrderID
+from [dbo].[Orders] o 
+right join [dbo].[Customers] c
+on o.CustomerID = c.CustomerID
+
+-- cau hoi 4 hay liet ke ten danh muc va ten nha cung cap cau cac san pham trong bang products bao gom ca danh muc va nha cung cap khong co san pham 
+SELECT DISTINCT c.CategoryName, s.CompanyName
+FROM [dbo].[Products] AS p
+FULL OUTER JOIN [dbo].[Categories] AS c
+ON p.CategoryID = c.CategoryID
+FULL OUTER JOIN [dbo].[Suppliers] AS s
+ON p.SupplierID = s.SupplierID

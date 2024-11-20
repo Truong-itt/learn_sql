@@ -1,0 +1,86 @@
+select c.[CategoryID],c.[CategoryName],p.[ProductID],p.[ProductName]
+from [dbo].[Products] as p,[dbo].[Categories] as c                                        
+where c.[CategoryID]=p.[CategoryID]
+-- tu bang employees va bang order ,hayin ra cac thong tin sauy day
+--ma nhan vien 
+-- tennhan vien 
+-- so luong don hang maf nhan vien da ban duoc
+select o.EmployeeID,e.[LastName],e.[FirstName]
+from [dbo].[Employees]as e,[dbo].[Orders]as o
+where o.EmployeeID=e.[EmployeeID]
+--group by o.EmployeeID;
+select *
+from [dbo].[Orders]
+
+
+--cc2
+select Employees.EmployeeID, Employees.LastName, Employees.FirstName, COUNT(Orders.OrderID)
+from Employees
+inner join Orders
+on Employees.EmployeeID = Orders.EmployeeID
+group by Employees.EmployeeID, Employees.LastName, Employees.FirstName
+
+-- tu bang customers va orders hay in ra cac thong tin sau day
+-- ma so khach hang
+-- ten cong ty 
+-- ten lien he
+-- so luong don hang da mua
+
+select c.CustomerID,c.CompanyName,c.ContactName,count(o.OrderID)
+from [dbo].[Customers] as c,[dbo].[Orders] as o
+where c.CustomerID = o.CustomerID
+group by c.CustomerID,c.CompanyName,c.ContactName
+
+
+-- tu bang orders va shippers hay in ra cac thong tin sau day
+-- ma nha van chuyen
+-- tne cong ty van chuyen
+-- tong so tien duoc van chuyen
+-- so tien duoc sap xep giam dan
+select s.ShipperID,s.CompanyName,sum(o.[Freight])
+from[dbo].[Orders] as o,[dbo].[Shippers] as s
+where s.ShipperID = o.ShipVia
+group by s.ShipperID,s.CompanyName
+order by sum(o.[Freight])desc;
+
+
+-- tu bang products va bang suppliers hay in ra cac thong tin sau day
+-- ma nha cung cap 
+--ten cong ty 
+-- tong so cac san pham khac nhau da cung cap
+-- va chi in ra 1 nha cung cap co so luong san pham khac nhau nhieu nhat
+select top 1 s.SupplierID,s.CompanyName,count(p.[ProductID])
+from [dbo].[Products] as p,[dbo].[Suppliers] as s
+where s.SupplierID = p.SupplierID
+group by s.SupplierID,s.CompanyName
+order by count(p.[ProductID])desc;
+
+
+-- tu bang order va order detail hay in ra cac thong tin sau day
+-- ma don hang
+-- tong so tien san pham cua don hang do
+select o.OrderID,sum(od.Quantity*od.UnitPrice)
+from [dbo].[Orders] as o,[dbo].[Order Details] as od
+where o.OrderID=od.OrderID
+group by o.OrderID
+
+-- tu 3 bang orderdetail order va employees
+-- in ra cac thong tin sau 
+-- ma don hang
+-- ten nhan vien 
+-- tong so tien san pham cua don hang
+select o.OrderID,e.FirstName,e.LastName,sum(od.Quantity*od.UnitPrice)
+from [dbo].[Orders] as o,[dbo].[Order Details] as od,[dbo].[Employees] as e
+where o.EmployeeID=e.EmployeeID and o.OrderID=od.OrderID
+group by o.OrderID,e.FirstName,e.LastName
+
+
+-- tu 3 bang order ,custumers ,shippers
+-- hay in ra thong tin sau 
+-- ma don hang
+-- ten khach hang
+-- ten cong ty van chuyen 
+-- va chi in ra cac don hang duoc giao den 'UK' trong nam 1997
+select o.OrderID,c.CustomerID,c.CompanyName,s.CompanyName,o.ShipCountry,year(o.ShippedDate)
+from [dbo].[Orders] as o,[dbo].[Customers] as c,[dbo].[Shippers] as s
+where s.ShipperID=o.ShipVia and o.CustomerID=c.CustomerID and YEAR(o.ShippedDate) = 1997 AND o.ShippedDate IS NOT NULL and o.[ShipCountry] = 'UK'

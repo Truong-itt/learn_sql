@@ -1,0 +1,57 @@
+-- kieu du lieu union va union all
+select o.OrderID,o.UnitPrice
+from  [dbo].[Order Details] o 
+where o.UnitPrice between 100 and 200
+
+select *
+from  [dbo].[Order Details] o 
+where o.UnitPrice between 100 and 200
+-- 22
+select *
+from  [dbo].[Order Details] o 
+where o.Quantity in (10,20)
+-- 433
+
+select *
+from  [dbo].[Order Details] o 
+where (o.UnitPrice between 100 and 200) and o.Quantity in (10,20)
+-- 7
+-- con so nay y nghia la giao cua hai truong hop o tren 
+
+select *
+from  [dbo].[Order Details] o 
+where (o.UnitPrice between 100 and 200) or o.Quantity in (10,20)
+-- 448
+
+select distinct o.OrderID
+from  [dbo].[Order Details] o 
+where (o.UnitPrice between 100 and 200 ) or (o.Quantity in(10,20))
+-- 360 lay ca dieu kien 1 va dieu kien 2 nhung khong duoc trung nhau 
+
+-- giai quyet van de trung lai du lieu khi xet diue kien co union 
+select o.OrderID from  [dbo].[Order Details] o  where o.UnitPrice between 100 and 200
+union 
+select o.OrderID from  [dbo].[Order Details] o  where o.Quantity in (10,20)
+-- 360 
+
+select o.OrderID from  [dbo].[Order Details] o  where o.UnitPrice between 100 and 200
+union all
+select o.OrderID from  [dbo].[Order Details] o  where o.Quantity in (10,20)
+-- 455 la ket qua 448 + 7 khong loai di truong hop nao het
+
+
+select  s.Country from [dbo].[Suppliers] s 
+union 
+select  c.Country from [dbo].[Customers] c
+-- 25 quoc gia khong co su trung lap
+select  s.Country from [dbo].[Suppliers] s 
+union all
+select  c.Country from [dbo].[Customers] c
+-- 120 quoc gia co su trung lap
+
+
+select c.City,c.Country from [dbo].[Customers] c where c.Country like 'U%'
+union
+select  s.City,s.Country from [dbo].[Suppliers] s where s.City = 'London'
+union 
+select o.ShipCity,o.ShipCountry from [dbo].[Orders] o where o.ShipCountry = 'USA'

@@ -1,0 +1,52 @@
+-- tu bang products va categories hay tim cac san pham thuoc danh sach 'seafood' in ra cac thong tin sau day
+-- ma the loai 
+-- ten the loai
+-- ma xan pham 
+-- ten san pham
+
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Products] as p,[dbo].[Categories] as c,[dbo].[Suppliers] as s
+where p.CategoryID = c.CategoryID and s.SupplierID = p.SupplierID 
+		and c.[CategoryName] = 'Seafood'
+
+-- tu bang produts va suppliers hay tim cac san pham thuoc duoc cung cap tu nuoc Germany(duc)
+select s.SupplierID,s.Country,p.ProductID,p.ProductName
+from[dbo].[Products] as p,[dbo].[Suppliers] as s
+where s.SupplierID = p.SupplierID and s.Country = 'Germany'
+
+
+-- tu 3 bang customers order shippers hay in ra cac thong tin sau dau 
+-- ma don hang
+-- ten khach hang
+-- ten cong ty van chuyen
+-- hi in ra ca don hang au ca khach hang den tu thanh pho 'London'
+
+select o.OrderID,c.CustomerID,s.CompanyName,o.ShipCity
+from[dbo].[Customers] as c,[dbo].[Orders] as o,[dbo].[Shippers] as s
+where s.ShipperID = o.ShipVia and o.CustomerID = c.CustomerID and o.ShipCity = 'London'
+select *
+from [dbo].[Customers]
+
+-- tu order ,customers,shippers hay in ra cac thong tin sau day 
+-- ma don hang
+-- ten khach hang
+-- ten cong ty van chuyen
+-- ngay yeu cau chuyen hang
+-- ngay giao hang
+-- va in ra cac don hang bij muon hon quy dinh 
+select o.OrderID,c.CustomerID,s.CompanyName,o.RequiredDate,o.ShippedDate
+from [dbo].[Customers] as c,[dbo].[Orders] as o,[dbo].[Shippers] as s
+where s.ShipperID = o.ShipVia and o.CustomerID = c.CustomerID and o.RequiredDate < o.ShippedDate
+
+
+-- tu order ,customers,shippers hay in ra cac thong tin sau day 
+-- nhung khah hang ma khong duoc den tu mi
+-- quoc gia do phari co hown 100 don dat hang
+-- hien thi thanh pho vao so don dat hang ra 
+
+select o.ShipCountry,o.
+from [dbo].[Customers] as c,[dbo].[Orders] as o,[dbo].[Shippers] as s
+where s.ShipperID = o.ShipVia and o.CustomerID = c.CustomerID 
+
+select *
+from [dbo].[Orders] as o

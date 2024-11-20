@@ -1,0 +1,64 @@
+-- hay cho biet nhung khach hang nafo da dat nhieu hon 20 don hang 
+-- sap xep theo thu tu tong so don hang giam dan
+select [CustomerID],count([OrderID])
+from[dbo].[Orders]
+group by [CustomerID]
+having count([OrderID]) > 20
+order by count([OrderID])desc;
+
+
+-- loc ra cac nhan vien co tong so don hang lon hon hoat bang 100 sap xep theo tong so hang giam dan 
+select [EmployeeID],count([OrderID])
+from [dbo].[Orders]
+group by [EmployeeID]
+having count([OrderID]) >= 100
+order by count([OrderID])desc;
+
+
+-- hay cho biet nhung the laoij nao co so san pham khac nhau  lon hon 11
+select [CategoryID],count([ProductName])
+from [dbo].[Products]
+group by [CategoryID]
+having count([ProductName]) > 11
+
+
+-- hay cho biet nhung the  laoi nao (category)
+-- co so tong so luogn san pham trong kho (unitsinstock)lon hon 30
+select [CategoryID],sum([UnitsInStock])
+from [dbo].[Products]
+group by [CategoryID]
+having sum([UnitsInStock]) > 350
+
+
+-- hay cho biet nhung quoc gia nao co nhieu hon 7 khach hang
+select [ShipCountry],count([CustomerID])
+from [dbo].[Orders]
+group by [ShipCountry]
+having count([CustomerID]) > 7
+
+
+-- hay cho biet nhung ngay nao co nhieu hon 5 don hang duoc giao 
+-- sap xep tang dan theo ngay giao hang
+select [ShippedDate],count(*)
+from [dbo].[Orders]
+where [ShippedDate] is not null
+group by [ShippedDate]
+having count(*) > 5
+order by [ShippedDate];
+
+-- hay cho biet nhung quoc gia bat dau bang chu A  hoac G
+-- va co so luong don hang lon hon 29
+select [ShipCountry],count(*)
+from [dbo].[Orders]
+where [ShipCountry] like('[A,G]%')
+group by [ShipCountry]
+having count(*) > 29
+order by count(*);
+
+-- hay cho biet nhung thanh pho nao co so luong don hang duoc giao la khac 1 va 2
+-- ngay dat hang tu ngay '1997-04-01' den ngay '1997-08-31'
+select[ShipCountry],count(*)
+from [dbo].[Orders]
+WHERE OrderDate BETWEEN '1997-04-01' AND '1997-08-31'
+group by [ShipCountry]
+HAVING count(*) <> 1 and count(*) <> 2;

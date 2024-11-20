@@ -1,0 +1,41 @@
+-- between ... and ...
+-- lay danh sach cac san pham co gia ban trong khoan tu 10 den 20
+select *
+from [dbo].[Products]
+where [UnitPrice] between 10 and 20;
+
+-- lay danh sach cac don hang duoc dat trong khoang thoi gian tu ngay
+-- 1996 -07 -01 den ngay 1996-07-31
+select top 10 [OrderDate]
+from [dbo].[Orders]
+where [OrderDate] between '1996-07-01'and'1996-07-31';
+
+-- tinh tong so tien van chuyen cua cac don hang duoc dat trong thoi gian 
+-- tu ngay 1996-07-01 den ngay '1996-07-31'
+select sum([Freight]) as [totalfreightjuly]
+from [dbo].[Orders]
+where [OrderDate] between '1996-07-01'and'1996-07-31';
+
+-- lay ra danh sach cac don dat hang co ngafy dat hang trong khoang tu 
+-- ngayf 1/1/1997 den ngay 31-12-1997 va duoc van chuyen bang duong tau thuy
+--(shipvia = 3)
+select *
+from[dbo].[Orders]
+where [ShipVia] = 3 and ([OrderDate] between '1997-1-1' and '1997-12-31');
+
+-- thu thach
+--1. Liệt kê danh sách Order có Discount [0.25 , 0.3] 
+--và tính trung bình các UnitPrice đó ( Bảng Order Details)
+select avg([UnitPrice])
+from [dbo].[Order Details]
+where ([Discount] between 0.25 and 0.3);
+
+select [Discount]
+from [dbo].[Order Details]
+where ([Discount] between 0.25 and 0.3);
+
+--2 Liệt kê danh sách nhân viên có Lastname từ A-M và 
+--BirthDate nhỏ hơn bằng 1959 ( Bảng Employees).
+select [BirthDate]
+from[dbo].[Employees]
+where [BirthDate] <= '1959' and [LastName] like'[A-M]%';

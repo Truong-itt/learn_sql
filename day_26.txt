@@ -1,0 +1,93 @@
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from [dbo].[Products] p 
+join [dbo].[Categories] c
+on p.CategoryID=c.CategoryID
+-- lay ra giong giua hai cai can lay 
+
+select c.CategoryID,c.CategoryName,count(p.ProductID)
+from [dbo].[Products] p 
+join [dbo].[Categories] c
+on p.CategoryID=c.CategoryID
+group by c.CategoryID,c.CategoryName
+
+
+select o.OrderID,c.CompanyName
+from [dbo].[Orders] o
+join [dbo].[Customers] c
+on c.CustomerID=o.CustomerID 
+ 
+
+ select c.CategoryID,c.CategoryName,count(p.ProductID)
+ from [dbo].[Categories] c
+ join [dbo].[Products] p 
+ on p.CategoryID =c.CategoryID
+ group by c.CategoryID,c.CategoryName
+
+
+ select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+ from [dbo].[Categories] c
+ full join [dbo].[Products] p 
+ on p.CategoryID =c.CategoryID
+
+ select c.ContactTitle,o.OrderID
+ from [dbo].[Orders] o 
+ inner join [dbo].[Customers] c
+ on c.CustomerID = o.CustomerID
+
+ -- sub querry /nested query
+
+
+ select p.ProductID,p.ProductName,p.UnitPrice
+ from [dbo].[Products] p 
+
+
+
+ select p.ProductID,p.ProductName,(p.UnitPrice)
+ from [dbo].[Products] p 
+ where p.UnitPrice >(select avg(p.UnitPrice)
+ from [dbo].[Products] p)
+
+
+ select c.CustomerID,c.CompanyName,count(o.OrderID)
+ from [dbo].[Customers] c
+ left join [dbo].[Orders] o
+ on c.CustomerID = o.CustomerID
+ group by c.CustomerID,c.CompanyName
+ having count(o.OrderID) > 10
+
+ -- sub query
+ select o.CustomerID
+ from [dbo].[Orders] o 
+ group by o.CustomerID
+ having count(o.OrderID)> 10 
+
+
+ select * 
+ from [dbo].[Customers]
+ where CustomerID in ( 
+	 select o.CustomerID
+	 from [dbo].[Orders] o 
+	 group by o.CustomerID
+	 having count(o.OrderID)> 10
+	  )
+
+-- tinh tong tien tung don hang
+-- hieu ve dieu kien lien ket va dieu kien lien ket baen ngaoi vao he thong
+select o.*,(
+	select sum(od.Quantity*od.UnitPrice) 
+	from [dbo].[Order Details] od
+	where o.OrderID = od.OrderID
+) as [gia tien]
+from [dbo].[Orders] o 
+
+-- kiem tra don hang thong qua order detail 
+-- kiem ra id va ten thong qua product
+select truong.ProductID,truong.ProductName,truong.[total number id]
+from (select p.ProductID,p.ProductName,(
+			select count(*)
+			from [dbo].[Order Details] od
+			where od.ProductID =  p.ProductID
+			) as [total number id]
+		from [dbo].[Products] p
+	) as truong
+

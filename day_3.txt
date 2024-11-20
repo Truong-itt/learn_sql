@@ -1,0 +1,21 @@
+--viet cau lenh sql lay ra 5 dong day tien trong bang customers
+SELECT TOP 5 *
+FROM [dbo].[Customers];
+
+-- VIET CAU LENH SQL LAY RA 30% NHAN VIEN CUA CONG TY HIEN TAI
+SELECT TOP 30 PERCENT *
+FROM [dbo].[Employees];
+
+SELECT TOP 30 PERCENT [Country]
+FROM [dbo].[Employees];
+
+-- VIET CAU LENH SQL LAY RA CAC DON HANG VOI QUY DINH LA MA KHACH 
+-- HANG KHONG DUOC TRUNG LAP , CHI LAY 5 DONG DU LIEU DAU TIEN
+SELECT DISTINCT TOP 5 [CustomerID] 
+FROM [dbo].[Customers];
+
+-- VIET CAU LENH SQL LAY RA CAC SAN PHA CO MA THE LOAI KHONG BI TRUNG LAP 
+-- VA CHI LAY RA 3 DONG DAU TIEN 
+SELECT DISTINCT TOP 3 [ProductID]
+FROM [dbo].[Products];
+

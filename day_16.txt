@@ -1,0 +1,49 @@
+-- group by
+-- dung de nhosm cac dong du lieu co cung gia tri 
+-- thuong duoc dung voi cac hamg count,max,min,avg
+-- noi don gian la group by giup cho chung ta gom nhom nhungg du lieu giong nhau trong cung mot co so du lieu 
+
+-- hay cho biet moi khach hang da dat bao nhieu don hang
+-- gop phan gom nhom du lieu lai nhung du lieu nhu nhau trong cùng mot cai gom lai
+select [CustomerID],count([OrderID]) as [totalorders]
+from [dbo].[Orders]
+group by [CustomerID];
+
+-- tinh gia tri don gia trung bifnh theo moi nha cung cap san pham
+select [SupplierID],avg([UnitPrice]) as [avgunitprice]
+from [dbo].[Products]
+group by [SupplierID];
+
+-- hay cho biet moi the loai co tong so bao nhieu san pham trong kho
+select [CategoryID],sum([UnitsInStock])
+from[dbo].[Products]
+group by[CategoryID];
+
+--hay cho biet gia van chuyenh thap nhat va lon nhat 
+--cua cac don hang theo tung thanh pho va quoc gia khac nhau
+-- xac dinh yeu cau gom nhom theo thanh pho va theo quoc gia
+-- dua vao do tinh gia cao va gia thap trong ddo 
+select [ShipCountry],[ShipCity],
+	min([Freight]) as [minfreight],
+	max([Freight])as [maxfreight]
+from[dbo].[Orders]
+group by[ShipCountry],[ShipCity]
+order by [ShipCountry] asc,[ShipCity]asc;
+
+-- thong ke so luong nhan vien theo tung quoc gia khac nhau theo thu tu tang dan
+select [Country], count([EmployeeID]) as [trung binh nhan vien]
+from [dbo].[Employees]
+group by [Country]
+order by [Country];
+
+--1. Thống kê số nhân viên theo từng thành phố và quốc gia (Bảng Employees)
+select [City],[Country],count([EmployeeID]) as [nhan vien theo quoc gia]
+from[dbo].[Employees]
+group by [City],[Country]
+order by[City]asc,[Country]asc;
+-- 2. Thống kê sản phẩm có [UnitPrice] nhỏ nhất , [Quantity] trung bình 
+--, [Discount] lớn nhất (Bảng Order Details).
+select min([UnitPrice]),AVG([Quantity]),max([Discount])
+from[dbo].[Order Details]
+group by [ProductID]
+order by [ProductID]desc;

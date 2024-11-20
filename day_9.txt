@@ -1,0 +1,52 @@
+-- menh de where
+-- chuc nang duoc su dung de loc cac ban ghi 
+-- no uoc su ungj de chi trich xuat nhung 
+-- ban ghi dap ung mot dieu kien cu the
+-- luu y co au khac hoi khac  la <>
+
+-- trong employee liet ke tat ca cac nhan vien den tu thanh pho london
+-- sau do sap ket qua theo last name
+select *
+from[dbo].[Employees]
+where[City]='London'
+order by [LastName]asc;
+
+-- hay liet ke tat ca cac don hang bi giao muon biet dang ngay can giao hang 
+-- la requireddate ,ngay giao hang thuc te la shippeddate
+select [OrderID],[RequiredDate],[ShippedDate]
+from[dbo].[Orders]
+where [ShippedDate] > [RequiredDate];
+
+select count(*) as [so luong don giao tre]
+from[dbo].[Orders]
+where [ShippedDate] > [RequiredDate];
+
+-- lay ra tat cac don hang chi tiet duoc giam gia nhieu hon 10%
+select *
+from[dbo].[Order Details]
+where [Discount]>0.1;
+
+-- hay liet ke tat ca don hang duoc gui den quoc gia la france
+select *
+from[dbo].[Orders]
+where [ShipCountry]='France'
+order by [CustomerID];
+-- liet ke cac san pham co so luong hang trong kho unitslnstock lon hon 20
+select *
+from [dbo].[Products]
+where [UnitsInStock]>20;
+
+-- Thử thách
+
+-- 1. Liệt kê những nhân viên cùng Title = Sales Representative 
+--, City = London ,cùng Country = USA (Bảng Employees).
+select *
+from [dbo].[Employees]
+where [Title]='Sales Representative'
+order by [FirstName];
+-- 2. Liệt kê các Order detail có Discount và [UnitPrice] <= 10 
+--( Bảng Order Details )
+select *
+from [dbo].[Order Details]
+where [Discount] <=10 AND [UnitPrice]<=10;
+

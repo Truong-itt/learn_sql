@@ -1,0 +1,19 @@
+--lay ra ten cua cac quoc gia khac nhau 
+SELECT DISTINCT Country
+FROM [dbo].[Customers];
+
+-- viet  cau lenh sql lay ra ten cac ma so buu dien
+SELECT DISTINCT PostalCode 
+FROM Suppliers;
+
+--VIET CAU LENH SQL LAY RA CAC DU LIEU KHAC  NHAU VE HO CUA NHAN VIEN 
+-- VA CACH GOI DANH HIEU LIC SU (TITLECOUNRTESY) CUA NHAN VIEN TU BANG EMPLOYEES
+SELECT DISTINCT [LastName],[TitleOfCourtesy]
+FROM [dbo].[Employees];
+
+SELECT DISTINCT [TitleOfCourtesy]
+FROM [dbo].[Employees];
+
+-- VIET CAU LENH LAY RA MA DON VI CAN CHUYEN KHAC NHAU CUA CAC DON HANG 
+SELECT DISTINCT [ShipVia]
+FROM [dbo].[Orders];

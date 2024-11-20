@@ -1,0 +1,670 @@
+use NORTHWND
+SELECT * from dbo.Products
+SELECT p.ProductName from dbo.Products as p
+
+SELECT p.ProductName,p.UnitPrice,p.QuantityPerUnit from dbo.Products as p
+
+SELECT c.ContactName,c.Country from dbo.Customers as c 
+
+SELECT  s.CompanyName,s.Phone from dbo.Suppliers as s
+
+SELECT * from dbo.Products as p
+SELECT * from dbo.Customers
+SELECT * from dbo.Suppliers
+
+-- bai 2
+-- distinct : lay du lieu khong trung lap 
+SELECT distinct c.Country
+from dbo.Customers as c 
+
+SELECT distinct s.PostalCode from dbo.Suppliers as s
+SELECT   e.LastName,e.TitleOfCourtesy from dbo.Employees as e 
+SELECT distinct  e.LastName,e.TitleOfCourtesy from dbo.Employees as e 
+
+SELECT distinct  o.ShipVia from dbo.Orders as o
+
+-- top :lay ra so luong phan tu mong muon 
+-- where dieu kien muon ap 
+SELECT  top(5)*  from dbo.Customers as  c
+-- percent : phan tram du lieu muon lay 
+SELECT top 30 percent * from dbo.Employees
+
+SELECT  distinct top 5 o.OrderID from dbo.Orders as o 
+
+SELECT distinct top 3 p.ProductID from dbo.Products as p 
+
+-- alias : cho cot du lieu mong muon 
+SELECT c.CompanyName as "cong ty " ,c.PostalCode as [ma buu dien],c.City as [thanh pho]
+from dbo.Customers as c
+
+SELECT e.LastName as [ho],e.FirstName as "ten" from dbo.Employees as e 
+SELECT top 15 * from dbo.Orders as o
+
+SELECT top 5 p.[ProductName],p.SupplierID,p.CategoryID from dbo.Products as p 
+
+-- min max
+-- tim gia tri lon nhat va gia tri nho nhat 
+SELECT min(p.UnitPrice) as [gia thap nhat ] from dbo.Products as p 
+SELECT max(p.UnitPrice) as [gia thap nhat ] from dbo.Products as p 
+
+SELECT max(o.OrderDate) as [ngay dat hang gan nhat] from dbo.Orders as o
+SELECT max(p.ProductID) as [ma san pham] ,max(p.ProductName) as [ten san pham] from dbo.Products as p 
+SELECT max(p.UnitsInStock) from dbo.Products as p 
+SELECT max(e.BirthDate) from dbo.Employees as e 
+
+-- count , sum ,avg 
+SELECT count(*) as [so luong dong tuy bang khach hang]
+from dbo.Customers as c
+
+SELECT sum(o.Freight) as [tong tien tat ca]
+from dbo.Orders as o
+
+SELECT avg(od.Quantity)as[so luong trunh binh]from dbo.[Order Details] as od 
+SELECT count(*),sum(p.UnitsInStock),avg(p.UnitPrice) from dbo.Products as p
+
+SELECT count(*)from dbo.Orders as o 
+SELECT avg(od.UnitPrice) as[gia trung binh], sum(od.Quantity) as [tinh tong]from dbo.[Order Details] as od 
+
+
+-- order by 
+-- xep thu tu tang dan va giam dan mac dinh khong ghi asc
+-- va kieu the vao desc 
+
+SELECT s.ContactName  from dbo.Suppliers as s 
+order by s.ContactName 
+
+SELECT p.UnitPrice from dbo.Products as p order by p.UnitPrice desc;
+
+SELECT * from dbo.Employees as e order by e.LastName 
+
+SELECT top 1 * from dbo.[Order Details] as od order by od.Quantity desc 
+
+SELECT * from dbo.Orders as o order by o.OrderDate desc;
+SELECT p.ProductName,p.UnitPrice,p.UnitsInStock from dbo.Products as p order by p.UnitsInStock desc ;
+
+
+-- * + - / trong sql 
+SELECT ((p.UnitsInStock)-(p.UnitsOnOrder))as [stocktemaining] from dbo.Products as p 
+-- tinh gia tri don hang 
+SELECT *,od.Quantity*od.UnitPrice as [pricedetailvalue] from dbo.[Order Details] as od 
+SELECT avg(o.Freight)/max(o.Freight) as [freightratio] from dbo.Orders as o 
+SELECT *,p.UnitPrice-p.UnitPrice*0.1 as [sale_unprice] from  dbo.Products as p 
+
+
+-- menh de where trong sql sever
+SELECT e.FirstName,e.City 
+from dbo.Employees as e 
+where e.City = 'London' order by e.LastName asc;
+
+SELECT count(*) from dbo.Orders as o where o.RequiredDate < o.ShippedDate
+SELECT * from dbo.[Order Details] as od where od.Discount > 0.1
+SELECT * from dbo.Orders as o where o.ShipCountry = 'France'
+SELECT * from dbo.Products as p where p.UnitsInStock > 20 ;
+
+
+--and 
+-- or 
+-- not
+-- dieu kien  nhieu dieu kien trong lap trinfh sql 
+SELECT  *  from dbo.Products as p where p.UnitsInStock between 50 and 100
+SELECT * from dbo.Orders as o where o.RequiredDate < o.ShippedDate and o.ShipCountry = 'Brazil'
+SELECT * from dbo.Products as p where p.UnitPrice <100 and p.CategoryID != 1
+SELECT * from dbo.Orders as o where o.Freight between 50 and 100
+SELECT * from dbo.Products as p where p.UnitPrice between 10 and 20 
+SELECT * from dbo.Products as p where p.UnitPrice>= 10 and p.UnitPrice<= 20 ;
+SELECT * from dbo.Orders as o where o.OrderDate between '1996-07-01'and '1996-07-31';
+SELECT sum(o.Freight) as [gia tat ca san pham]from dbo.Orders as o where o.OrderDate between '1996-07-01'and '1996-07-31';
+SELECT * from dbo.Orders as o where (o.OrderDate between '1997-01-01'and '1997-12-31') and o.ShipVia=3;
+
+-- toan tu like timkiem ky tu co quy tac
+SELECT c.Country from dbo.Customers as c where c.Country like 'A%'; 
+SELECT o.ShipCity  from dbo.Orders  as o where o.ShipCity like '%a%'; 
+SELECT o.ShipCountry  from dbo.Orders  as o where o.ShipCountry like 'U_'; 
+SELECT o.ShipCountry  from dbo.Orders  as o where o.ShipCountry like 'U%'; 
+SELECT *from dbo.Suppliers as s where s.ContactName like '%b%';
+
+
+-- willcard 
+-- how to the update skill math like for sql server ?
+-- h_t : duoc 1 ty tu 
+-- h[oa]t   : 1 trong hai
+-- h[^oa]t   : khong co hai ky tu nhu tren 
+-- c[a-b]t   : cac ky tu tu a den b
+SELECT c.ContactName from dbo.Customers as c where c.ContactName like 'A%'; 
+SELECT c.ContactName from dbo.Customers as c where c.ContactName like 'H_%'; 
+SELECT o.ShipCity  from dbo.Orders  as o where o.ShipCity like 'L[u,o]%'; 
+SELECT o.ShipCity  from dbo.Orders  as o where o.ShipCity like 'L[^u,o]%'; 
+SELECT o.ShipCity  from dbo.Orders  as o where o.ShipCity like 'L[a-e]%'; 
+select from dbo.Suppliers as s where(CompanyName LIKE 'A%[^b]%');
+
+
+-- in kieu du lieu in not in 
+use NORTHWND
+select *  
+from dbo.Orders as o
+where o.ShipCountry IN ('Germany','UK','Brazil')  
+
+select *  
+from dbo.Orders as o
+where o.ShipCountry not IN ('Germany','UK','Brazil')  
+
+select *
+from dbo.Products as p
+where p.CategoryID not in (2,3,4)
+
+select * 
+from dbo.Employees as e 
+where e.TitleOfCourtesy not in ('Ms.','Mrs.')
+select * 
+from dbo.Employees as e 
+where e.TitleOfCourtesy in ('Ms.','Mrs.')
+
+select * from dbo.Customers as c where c.City not in ('Berlin','London','Warszawa')
+
+-- KIEU DU LIEU is null is not null 
+-- khi select co cho phep du lieu co duoc phep null hay khong 
+-- chu yeu xem kieu du lieu co bi null hay khong 
+select o.ShippedDate  
+from dbo.Orders as o 
+where o.ShippedDate is not null 
+
+select count(*)
+from dbo.Orders as o 
+where o.ShippedDate is null 
+
+select c.Region 
+from dbo.Customers as c 
+where c.Region is not null
+
+select * from dbo.Customers as c where c.CompanyName is null
+
+select  * from dbo.Orders as o where o.ShipRegion is not null 
+
+
+-- hieu ve kieu du lieu group by 
+-- gom nhom kieu du lieu va dong thoi dem xem kieu du lieu do xuat hien may lan 
+-- thuong duoc dung voi cac ham count max min sum avg 
+select  o.CustomerID,count(*) from dbo.Orders as o group by o.CustomerID
+select p.SupplierID,avg(p.UnitPrice)  from dbo.Products as p group by p.SupplierID
+select p.CategoryID , sum(p.UnitsInStock) from dbo.Products as p group by p.CategoryID 
+select o.ShipCountry,o.ShipCity,min(o.Freight),max(o.Freight) from dbo.Orders as o group by o.ShipCountry,o.ShipCity order by o.ShipCountry,o.ShipCity 
+select e.Country,count(*) from dbo.Employees as e group by e.Country
+
+
+-- kieu du lieu day month year
+-- ham lay ngay thang nam trog lap trinh sql
+-- tinh so luong don dat hang trong nam 1997 
+select count(*)from dbo.Orders as o where year(o.OrderDate) = 1997
+-- tinh so luong don dat hang trong nam 1997 cua tung  khach hang cho bt khac h hang nao nam may va so luong don mua trng nam do 
+select o.CustomerID,count(*),year(o.OrderDate)
+from dbo.Orders as o 
+where year(o.OrderDate) = 1997 
+group by o.CustomerID,year(o.OrderDate)
+select * from dbo.Orders as o where month(o.OrderDate)= 5 and year(o.OrderDate)= 1997
+select * from dbo.Orders as o where month(o.OrderDate)= 9 and year(o.OrderDate)= 1996 and day(o.OrderDate)=4
+select * from dbo.Orders as o where o.OrderDate = '1996-09-04';
+
+select  o.CustomerID,count(*) as [so luong phan tu],month(o.OrderDate) as [thang mua]
+from dbo.Orders as o 
+where year(o.OrderDate)=1998 
+group by month(o.OrderDate),o.CustomerID
+order by month(o.OrderDate)
+
+select  month(o.ShippedDate),count(*),year(o.ShippedDate)
+from dbo.Orders as o 
+where month(o.ShippedDate)=5 
+group by  month(o.ShippedDate),year(o.ShippedDate)
+order by year(o.ShippedDate) asc;
+
+-- having : loc du lieu sau gorup by 
+-- co kha nang can thiep vao group by sau hon where
+select o.CustomerID,count(*) 
+from dbo.Orders as o 
+group by o.CustomerID 
+having count(*) > 20 
+order by count(*) desc;
+
+select p.SupplierID,sum(p.UnitsInStock) ,avg(p.UnitPrice) 
+from dbo.Products as p 
+group by p.SupplierID 
+having sum(p.UnitsInStock) > 30 and avg(p.UnitPrice) < 50 
+
+select month(o.ShippedDate),sum(o.Freight)
+from dbo.Orders as o 
+group by month(o.ShippedDate)
+order by sum(o.Freight);
+-- tong so tien  van chuyen cua  tung thang 
+-- trong nua nam 18996
+-- tong tien cua san pham phai lon hon 1000
+select month(o.ShippedDate),sum(o.Freight)
+from dbo.Orders as o 
+where o.ShippedDate between '1996-07-01' and '1996-12-31'
+group by month(o.ShippedDate) having sum(o.Freight) > 1000
+order by month(o.ShippedDate);
+
+select o.ShipCity,count(*) 
+from dbo.Orders as o 
+group by o.ShipCity 
+having count(*) > 16
+order by count(*) desc;
+
+select o.CustomerID,count(*) 
+from dbo.Orders as o 
+group by o.CustomerID 
+having count(*) > 20
+order by count(*) desc;
+
+
+select  e.EmployeeID,count(*)  
+from dbo.Orders as e 
+group by e.EmployeeID 
+having count(*) >= 100 
+order by count(*) desc;
+
+select  p.CategoryID,count(*) from dbo.Products as p group by p.CategoryID having count(*) > 11
+select  p.CategoryID,sum(p.UnitsInStock) 
+from dbo.Products as p 
+group by p.CategoryID
+having sum(p.UnitsInStock) > 350
+
+select o.ShipCountry,count(o.OrderID)
+from dbo.Orders as o 
+group by o.ShipCountry 
+having count(o.OrderID) > 7
+
+select day(o.ShippedDate),count(*)
+from dbo.Orders as o 
+group by day(o.ShippedDate) having count(*) > 5  
+order by  day(o.ShippedDate)
+
+select o.ShipCountry,count(*) 
+from dbo.Orders as o 
+where o.ShipCountry like '[A,G]%'
+group by o.ShipCountry  having count(*) > 29
+order by count(*) desc;
+
+select o.ShipCity,count(*) 
+from dbo.Orders as o 
+where o.OrderDate between '1997-04-01' and '1997-08-31' 
+group by o.ShipCity  having count(*) not in (1,2);
+
+
+-- truy van du lieu tu nhieu bang
+-- muon su dung thong tin tu nhieu ban phai cai datj moi lien he cho tung bang lien ket voi nhau 
+select p.ProductID,p.ProductName,c.CategoryID,c.CategoryName 
+from dbo.Products as p, dbo.Categories as c 
+where p.CategoryID=c.CategoryID
+
+select e.EmployeeID,e.FirstName,e.LastName,count(o.OrderID)
+from dbo.Employees as e,dbo.Orders as o 
+where e.EmployeeID = o.EmployeeID
+group by e.EmployeeID,e.FirstName,e.LastName
+
+select c.CustomerID,c.CompanyName,c.ContactTitle,count(*) as[Number of order purchages] 
+from dbo.Customers as c , dbo.Orders as o 
+where c.CustomerID=o.CustomerID
+group by c.CustomerID,c.CompanyName,c.ContactTitle
+
+select s.ShipperID,s.CompanyName,sum(o.Freight)as[totalfreight] from dbo.Orders as o,dbo.Shippers as s 
+where o.ShipVia= s.ShipperID 
+group by s.ShipperID,s.CompanyName
+order by sum(o.Freight) desc;
+
+select top 1 s.SupplierID,s.CompanyName,count(p.ProductID)
+from dbo.Products as p, dbo.Suppliers as s
+where s.SupplierID = p.SupplierID
+group by  s.SupplierID,s.CompanyName
+order by count(p.ProductID) desc;
+
+select o.OrderID,sum(o.Freight*od.Quantity) from dbo.Orders as o,dbo.[Order Details] as od 
+where o.OrderID=od.OrderID
+group by o.OrderID
+
+select o.OrderID,e.FirstName,e.LastName,sum(o.Freight*od.Quantity)
+from dbo.[Order Details] as od ,dbo.Employees as e, dbo.Orders as o
+where od.OrderID=o.OrderID and o.EmployeeID=e.EmployeeID
+group by o.OrderID,e.FirstName,e.LastName
+
+select o.OrderID,c.CompanyName,s.CompanyName,o.ShipCountry,year(o.ShippedDate) 
+from dbo.Customers as c ,dbo.Orders as o,dbo.Shippers as s
+where c.CustomerID=o.CustomerID and o.ShipVia=s.ShipperID and o.ShipCountry = 'UK' and year(o.ShippedDate) =1997
+
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from dbo.Products as p, dbo.Categories as c 
+where p.CategoryID = c.CategoryID and c.CategoryName='Seafood'
+group by c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+
+use NORTHWND
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from dbo.Suppliers as s , dbo.Categories as c , dbo.Products as p
+where s.SupplierID=p.SupplierID and c.CategoryID = p.CategoryID and c.CategoryName='Seafood'
+
+select s.SupplierID,s.Country,p.ProductID,p.ProductName
+from dbo.Suppliers as s , dbo.Categories as c , dbo.Products as p
+where s.SupplierID=p.SupplierID and c.CategoryID = p.CategoryID and s.Country='Germany'
+
+
+select o.OrderID,c.ContactName,c.CompanyName,c.City 
+from dbo.Orders as o ,dbo.Customers as c, dbo.Shippers as s
+where o.CustomerID = c.CustomerID and s.ShipperID = o.ShipVia and c.City = 'London'
+
+select o.OrderID,c.ContactName,s.CompanyName,o.RequiredDate,o.ShippedDate
+from dbo.Orders as o ,dbo.Customers as c, dbo.Shippers as s
+where o.CustomerID = c.CustomerID and s.ShipperID = o.ShipVia and o.RequiredDate<o.ShippedDate
+
+select o.ShipCountry,count(*)
+from dbo.Customers as c,dbo.Orders as o ,dbo.Shippers as s
+where o.CustomerID = c.CustomerID and s.ShipperID = o.ShipVia and o.ShipCountry <> 'USA'
+group by o.ShipCountry having count(*) > 100
+
+
+-- kieu du lieu union trong lap trinh sql
+-- lay ra ket qua co dươc trong ca hai bang 
+-- union 
+-- union all lay ket qua tu ca hai bang khong phan biêt trungg hai khong 
+select count(*)from dbo.[Order Details] as od where od.UnitPrice between 100 and 200
+--> 22
+select count(*)from dbo.[Order Details] as od where od.Quantity in(10,20);
+--> 433 
+-- liet ke don hang co gia tu 100 den 200 va co quantity la 10 hoac 2o
+select  od.OrderID from dbo.[Order Details] as od where od.UnitPrice between 100 and 200
+union
+select od.OrderID from dbo.[Order Details] as od where od.Quantity in(10,20);
+--> 360
+
+select  od.OrderID from dbo.[Order Details] as od where od.UnitPrice between 100 and 200
+union all
+select od.OrderID from dbo.[Order Details] as od where od.Quantity in(10,20);
+--> 455
+
+-- cach thong thuong
+select  od.OrderID from dbo.[Order Details] as od where (od.UnitPrice between 100 and 200) and od.Quantity in(10,20);
+--> 7
+select  od.OrderID from dbo.[Order Details] as od where (od.UnitPrice between 100 and 200) or od.Quantity in(10,20);
+--> 448
+select distinct od.OrderID from dbo.[Order Details] as od where (od.UnitPrice between 100 and 200) or od.Quantity in(10,20);
+--> 360
+
+
+select od.OrderID from dbo.[Order Details]  as od
+where od.UnitPrice between 100 and 200
+union 
+select od.OrderID from dbo.[Order Details]  as od
+where od.Quantity in(10,20);
+
+select distinct s.City,s.Country from dbo.Suppliers as s 
+union 
+select distinct c.City,c.Country from dbo.Customers as c 
+--94
+select distinct s.City,s.Country from dbo.Suppliers as s 
+union all
+select distinct c.City,c.Country from dbo.Customers as c 
+--> 99 tung lai 5 quoc gia
+
+select distinct s.City,s.Country from dbo.Suppliers as s 
+union 
+select distinct c.City,c.Country from dbo.Customers as c 
+union
+select distinct o.ShipCity,o.ShipCountry from dbo.Orders as o 
+--> 96 quoc gia va thanh pho khong bi trung lap lay ra duoc tu 3 bang
+  
+
+-- cau lenh join left join right join full join 
+-- cu phap 
+--select 
+-- from 
+-- inner join 
+-- on 
+select o.OrderID, c.CompanyName
+from dbo.Orders  as o  
+join dbo.Customers as c on o.CustomerID = c.CustomerID
+join dbo.Suppliers as s on o.ShipVia = s.SupplierID
+
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from dbo.Suppliers as s 
+join dbo.Products as p on p.SupplierID = s.SupplierID
+join dbo.Categories as c on c.CategoryID =p.CategoryID
+
+select *from dbo.Categories
+
+select c.CategoryID,c.CategoryName,p.ProductID,count(p.ProductID)
+from dbo.Categories  as c 
+join dbo.Products as p on c.CategoryID =p.CategoryID
+group by c.CategoryID,c.CategoryName,p.ProductID
+
+select c.CategoryID,c.CategoryName,p.ProductID,count(p.ProductID)
+from dbo.Categories  as c
+left join dbo.Products as p 
+on c.CategoryID =p.CategoryID
+group by c.CategoryID,c.CategoryName,p.ProductID
+
+ select o.OrderID, c.CompanyName
+from dbo.Orders  as o  
+join dbo.Customers as c on o.CustomerID = c.CustomerID
+
+ select o.OrderID, c.CompanyName
+from dbo.Orders  as o  
+right join dbo.Customers as c on o.CustomerID = c.CustomerID
+
+
+select c.CompanyName,COUNT(o.OrderID)
+from dbo.Orders  as o  
+right join dbo.Customers as c on o.CustomerID = c.CustomerID
+group by c.CompanyName
+
+
+select * from dbo.Products
+
+select c.CategoryID,c.CategoryName,p.ProductID,p.ProductName
+from dbo.Products as p
+full join dbo.Categories as c on c.CategoryID =p.CategoryID
+
+select  e.FirstName,e.LastName,c.CustomerID
+from dbo.Orders as o 
+join dbo.Customers as c 
+on c.CustomerID = o.CustomerID
+join dbo.Employees as e 
+on e.EmployeeID = o.EmployeeID
+
+select s.ContactName,p.ProductName from dbo.Products as p 
+left join dbo.Suppliers as s 
+on p.SupplierID = s.SupplierID
+
+select c.CompanyName,o.OrderID from dbo.Orders as o
+right join dbo.Customers as c 
+on c.CustomerID = o.CustomerID
+
+select s.ContactName,p.ProductName from dbo.Products as p 
+full join dbo.Suppliers as s 
+on p.SupplierID = s.SupplierID
+
+-- bai tap ve join trong sql 
+select distinct p.ProductID,p.ProductName,s.ContactName
+from dbo.Orders as o 
+join dbo.[Order Details] as od
+on od.OrderID = o.OrderID
+join dbo.Suppliers as s
+on o.ShipVia = s.SupplierID
+join dbo.Products as p
+on p.SupplierID = s.SupplierID
+
+select c.CompanyName, e.FirstName,e.LastName,o.OrderID
+from dbo.Orders as o 
+left join dbo.Employees as e
+on e.EmployeeID = o.EmployeeID
+left join dbo.Customers as c 
+on c.CustomerID =o.CustomerID
+
+
+select o.OrderID,e.FirstName,e.LastName,c.CompanyName
+from dbo.Orders as o
+right join dbo.Employees as e
+on e.EmployeeID = o.EmployeeID
+right join dbo.Customers as c 
+on o.CustomerID=c.CustomerID
+
+
+select p.ProductID,p.ProductName,s.CompanyName from dbo.Products as p 
+full join dbo.Suppliers as s 
+on s.SupplierID = p.SupplierID
+full join dbo.Categories as c
+on c.CategoryID=p.CategoryID
+
+
+select c.ContactName,p.ProductName from dbo.Orders as o
+join dbo.[Order Details] as od 
+on o.OrderID=od.OrderID 
+join dbo.Customers as c 
+on c.CustomerID = o.CustomerID
+join dbo.Suppliers as s 
+on s.SupplierID = o.ShipVia
+join dbo.Products as p
+on p.SupplierID = s.SupplierID
+
+select e.FirstName,c.ContactName
+from dbo.Orders as o
+full join dbo.Customers as c 
+on c.CustomerID = o.CustomerID
+left join dbo.Employees as e
+on e.EmployeeID = o.EmployeeID 
+
+
+-- sub query truy van long nhau 
+select p.ProductID,p.ProductName,p.UnitPrice from dbo.Products as p 
+
+-- tim gia  trung binh san pham 
+select p.ProductName,avg(p.UnitPrice) from dbo.Products as p group by p.ProductName
+-- bay gio la gia trung binh tren toan tap 
+select avg(p.UnitPrice) from dbo.Products as p
+--loc ra san pham co gia cao hon gia trung binh 
+-- uu diem tinh tren thoi gian thuc cua bo du lieu 
+select p.ProductID,p.ProductName,p.UnitPrice from dbo.Products  as p where p.UnitPrice > (
+	select avg(p.UnitPrice) from dbo.Products as p
+)
+
+
+-- loc ra cac khach hang co so don hang lon hon 10 
+select c.CompanyName,c.ContactName,count(o.OrderID) 
+from dbo.Customers as c 
+join dbo.Orders as o
+on o.CustomerID = c.CustomerID
+group by c.CompanyName,c.ContactName having count(o.OrderID) > 10
+
+select t.CompanyName from (
+	select c.CompanyName,c.ContactName,count(o.OrderID) as [new]
+	from dbo.Customers as c 
+	join dbo.Orders as o
+	on o.CustomerID = c.CustomerID
+	group by c.CompanyName,c.ContactName having count(o.OrderID) > 10
+)as t 
+
+
+select * 
+from dbo.Customers as c
+where c.CustomerID in(
+	select o.CustomerID 
+	from dbo.Orders as o 
+	group by o.CustomerID
+	having count(*)> 10 
+)
+
+-- tinhtong tien cho tungg  don hang 
+select o.* ,(
+	select sum(o.Freight*od.Quantity)
+	from dbo.[Order Details] as od,dbo.Orders as o 
+	where od.OrderID=o.OrderID
+) as [gia cho tung san pham]
+from dbo.Orders as o 
+
+-- loc ra tensan pham va tong so don hang cua an pham do 
+select p.ProductName,(
+	select count(o.OrderID)
+	from dbo.[Order Details] as o 
+	where o.ProductID =p.ProductID
+)as [total number of order]
+from dbo.Products as p 
+
+select p.ProductName,p.ProductName from (
+	(
+		select p.ProductName,(
+			select count(o.OrderID)
+			from dbo.[Order Details] as o 
+			where o.ProductID =p.ProductID
+		)as [total number of order]
+		from dbo.Products as p 
+	)
+) as p;
+
+select o.OrderID,o.[unprice for orderid]
+from (
+	select o.OrderID,sum(od.Quantity*o.Freight) as [unprice for orderid]
+	from dbo.[Order Details] as od ,dbo.Orders as o 
+	where od.OrderID =o.OrderID
+	group by o.OrderID
+)as o
+
+
+
+use NORTHWND
+-- liet ke don hang co ngay dat hang dan nhat 
+select max(o.OrderDate)
+from dbo.Orders as o 
+
+select * from dbo.Orders as o 
+where o.OrderDate = (
+	select max(o.OrderDate)
+	from dbo.Orders as o 
+)
+
+-- liet ke cac san pham khong do don dat hang nao mua chung
+select p.ProductName,count(*) from dbo.Products as p 
+group by p.ProductName
+
+select distinct p.ProductID
+from dbo.[Order Details] as o ,dbo.Products as p
+where o.ProductID = p.ProductID
+
+
+select * from dbo.Products as p
+where p.ProductID not in (
+	select distinct p.ProductID
+	from dbo.[Order Details] as o ,dbo.Products as p
+	where o.ProductID = p.ProductID
+)
+
+
+-- lay thong tin ve cac don hang va ten cac san pham 
+-- thuoc ca don ahgn chuwa duocj giaocho khach 
+select *,p.ProductName from dbo.Orders as o 
+join dbo.Shippers s 
+on s.ShipperID=o.ShipVia
+join dbo.Products p
+on p.SupplierID = s.ShipperID
+where o.ShippedDate not in (
+	select  o.OrderID
+	from dbo.Orders o where o.ShippedDate is null
+)
+
+
+-- lay thong tin ve cac san pham co so luong ton kho 
+-- it hon so luong ton kho trung binh cua tat ca cac san pham 
+select * from dbo.Customers c
+join dbo.Orders o 
+on o.CustomerID =c.CustomerID
+join dbo.[Order Details] od
+on od.OrderID = o.OrderID
+where (od.UnitPrice*od.Quantity) in (
+	select max(od.Quantity*od.UnitPrice)
+	from dbo.[Order Details] od 
+);
+
+
+-- vieo cuôi 
+-- thứ tự thực thi truy vân trong sql 
+-- from 
+-- where
+-- groupby 
+-- having 
+-- select 
+-- order by 
+-- limit

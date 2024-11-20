@@ -1,0 +1,37 @@
+-- hay cho biet nhung khach hang nao da dat nhieu hon 20 don hang 
+--,sap xep theo thu tu tong so don hang giam dan
+select [CustomerID],count([OrderID])
+from [dbo].[Orders]
+group by [CustomerID]
+having count([CustomerID]) > 20
+order by count([CustomerID])desc;
+
+
+
+
+-- hay loc ra nha cung cap sn pham 
+-- co tong so luong hang trong kho lon hon 30
+-- co  trung binh don gia duoi 50
+select [SupplierID],sum([UnitsInStock]),avg([UnitPrice])
+from [dbo].[Products]
+group by [SupplierID]
+having sum([UnitsInStock]) > 30 and avg([UnitPrice]) < 50;
+
+
+-- cho biet tong so tien van chuyen cua tung thang
+-- trog nua nam sau cua nam 1996
+-- sap xep theo  thang tang dan 
+-- thang do phai la thang co danh thu tren 1000
+select month([ShippedDate]) ,sum([Freight])
+from [dbo].[Orders]
+where [ShippedDate] between '1996-07-01' and '1996-12-31'
+group by month([ShippedDate])
+having sum([Freight]) > 1000
+order by month([ShippedDate]);
+
+-- loc ra nhung thanh pho  co so luong don hang > 16 va sap xep theo tong so luong giam dan 
+select [ShipCountry],count([OrderID])
+from [dbo].[Orders]
+group by [ShipCountry]
+having count([OrderID]) > 16
+order by count([OrderID])desc;

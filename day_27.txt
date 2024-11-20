@@ -1,0 +1,59 @@
+-- liet ke cac don dat hang có ngay dat hang gan nhat
+select max([OrderDate])
+from [dbo].[Orders]
+
+
+select *
+from [dbo].[Orders] o
+where o.[OrderDate] in (
+	select max([OrderDate])
+	from [dbo].[Orders]
+); 
+
+-- liet ke tat ca cac don san pham productname
+-- mà khong co don dat hang nào dat mua chung
+select *
+from [dbo].[Products] p 
+where p.ProductID  in (select od.ProductID from [dbo].[Order Details] od)
+
+-- lay thong tin ve cac don hang va ten cac san pham 
+-- thuoc cac don hang chua duoc giao hang
+select o.OrderID,p.ProductName
+from [dbo].[Orders] o 
+inner join [dbo].[Order Details] od
+on o.OrderID = od.OrderID
+join dbo.Products p
+on p.ProductID = od.ProductID
+where o.OrderID in (
+	select OrderID
+	from [dbo].[Orders]
+	where ShippedDate is null
+);
+
+
+-- lay thong tin ve cac san pham co so luong ton kho 
+-- it hon so luong ton kho trung bình cua tat ca san pham
+
+select *
+from dbo.Products p 
+where p.UnitsInStock > (
+	select avg(UnitsInStock)
+	from dbo.Products 
+)
+
+
+-- lay thong tin ve cac khach hang co tong gia tri 
+-- don hang lon nhat
+-- thuc hiẹn lay thong tin tu customers
+select od.Quantity*od.UnitPrice,c.*
+from [dbo].[Order Details] od 
+join [dbo].[Orders] o 
+on o.OrderID = od.OrderID
+join [dbo].[Customers] c
+on c.CustomerID = o.CustomerID
+where od.Quantity*od.UnitPrice in (
+	select max(od.Quantity*od.UnitPrice)
+	from dbo.[Order Details] as od
+)
+
+

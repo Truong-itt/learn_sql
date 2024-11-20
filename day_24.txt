@@ -1,0 +1,53 @@
+-- liet ke ten san pham va ten nha cun cap cau cac san pham da cuo  dat hang trong bang 'order details'
+-- su dungj inner join de ket hop bang 'order details' voi cac bang lien quan de lay thong tin san pham va nha cung cap 
+select o.ProductID,p.ProductName,s.CompanyName
+from[dbo].[Order Details] o
+inner join [dbo].[Products] p 
+on o.ProductID = p.ProductID
+inner join [dbo].[Suppliers] s
+on s.SupplierID = p.SupplierID
+
+
+-- liet ke ten khach hang va ten nhan vien phu trach cau cac don hang tron bang 'order'
+-- bao gom ca cac don hang khong co nhan vien phuj trach
+-- su dunj left join de ket hop bang order voi bang employees de lay thong tin ve khach hang va nhan vien phu trach
+select o.OrderID,e.FirstName,e.LastName,c.ContactName
+from [dbo].[Orders] o
+left join[dbo].[Customers] c
+on o.CustomerID =c.CustomerID
+left join [dbo].[Employees] as e
+on e.EmployeeID = o.EmployeeID
+
+
+
+-- liet ke ten khach hang va ten nhan vien phu trach cua cac don hang trong bang orders 
+-- bao gom ca cac khach hang khong co don hang 
+-- su dungj right join de ket hop bang orders  voi bang customers de lay thong tin ve khach hang va nhan vien phu trach 
+select o.OrderID,e.FirstName,e.LastName,c.ContactName,c.CompanyName
+from [dbo].[Orders] o
+inner join [dbo].[Customers] c
+on o.CustomerID = c.CustomerID
+inner join [dbo].[Employees] e
+on o.EmployeeID = e.EmployeeID
+
+
+-- liet ke ten danh muc va ten nha cung cap cau cac san pham trong bang 
+--product .bao gom ca cac danh muc va nha cung cap khong co san pham 
+-- su dung full join hoac ket hop left join va right join de lay thonbg tin ve danh muc va nha cung cap 
+select p.ProductID,p.ProductID,s.CompanyName,c.CategoryName
+from [dbo].[Products] p 
+full join [dbo].[Suppliers] s
+on p.SupplierID = s.SupplierID
+full join [dbo].[Categories] c
+on p.CategoryID = c.CategoryID
+
+
+-- liet ke ten nhan vien va ten khach hang cua cac don hang torn gnbang orders bao gom ca cac don hang khong co nhan vien 
+-- hoac khach hang tuon ung su dungj full join hoac ket hop left join va right join de kep hop bang orders voi bang employees va customers 
+-- de lay thon tin ve nhan vien va khach hang 
+select o.OrderID,e.FirstName,e.LastName,c.ContactName
+from [dbo].[Orders] o
+full join [dbo].[Employees] e
+on o.EmployeeID = e.EmployeeID
+full join [dbo].[Customers] c
+on c.CustomerID=o.CustomerID
